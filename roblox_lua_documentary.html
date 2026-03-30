@@ -1,0 +1,6124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Complete Roblox Lua Programming Documentary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+    <style>
+        /* Reset and Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 11pt;
+            line-height: 1.7;
+            color: #333;
+            text-align: justify;
+            text-align-last: left;
+            string-set: doctitle "";
+        }
+        
+        /* Page Setup */
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm;
+            @top-center { content: string(doctitle); font-size: 9pt; color: #666; }
+            @bottom-center { content: counter(page); font-size: 9pt; color: #666; }
+        }
+        
+        @page :first {
+            margin: 0;
+            @top-center { content: none; }
+            @bottom-center { content: none; }
+        }
+        
+        @page cover { 
+            margin: 0;
+            @top-center { content: none; } 
+            @bottom-center { content: none; } 
+        }
+        
+        @page toc { 
+            @top-center { content: none; } 
+            @bottom-center { content: none; } 
+        }
+        
+        /* Cover Page - Modern Tech Design */
+        .cover {
+            page: cover;
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            page-break-after: always;
+        }
+        
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(ellipse, rgba(229, 57, 53, 0.15) 0%, transparent 70%);
+        }
+        
+        .cover::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -20%;
+            width: 60%;
+            height: 100%;
+            background: radial-gradient(ellipse, rgba(0, 150, 136, 0.12) 0%, transparent 60%);
+        }
+        
+        .cover-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .cover-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .shape-1 {
+            position: absolute;
+            top: 15%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(229, 57, 53, 0.3);
+            border-radius: 20px;
+            transform: rotate(15deg);
+        }
+        
+        .shape-2 {
+            position: absolute;
+            top: 25%;
+            right: 5%;
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 150, 136, 0.1);
+            border-radius: 50%;
+        }
+        
+        .shape-3 {
+            position: absolute;
+            bottom: 20%;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(255, 193, 7, 0.2);
+            transform: rotate(-10deg);
+        }
+        
+        .shape-4 {
+            position: absolute;
+            bottom: 30%;
+            left: 15%;
+            width: 60px;
+            height: 60px;
+            background: rgba(229, 57, 53, 0.08);
+            border-radius: 12px;
+            transform: rotate(25deg);
+        }
+        
+        .cover-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 85%;
+            z-index: 10;
+        }
+        
+        .cover-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: rgba(229, 57, 53, 0.2);
+            border: 1px solid rgba(229, 57, 53, 0.4);
+            border-radius: 30px;
+            color: #ff6b6b;
+            font-size: 10pt;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+        
+        .cover-title {
+            font-size: 36pt;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+        
+        .cover-subtitle {
+            font-size: 16pt;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 60px;
+            line-height: 1.5;
+        }
+        
+        .cover-divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #e53935, #ff6b6b);
+            margin: 0 auto 40px;
+            border-radius: 2px;
+        }
+        
+        .cover-meta {
+            font-size: 11pt;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 2;
+        }
+        
+        .cover-meta p {
+            margin: 5px 0;
+        }
+        
+        .cover-edition {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 6px 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            font-size: 9pt;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Table of Contents */
+        .toc-page {
+            page: toc;
+            page-break-after: always;
+        }
+        
+        .toc-title {
+            font-size: 24pt;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e53935;
+        }
+        
+        .toc {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .toc a {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: baseline;
+        }
+        
+        .toc a::after {
+            content: leader('.') target-counter(attr(href url), page);
+            flex: 1;
+            text-align: right;
+            margin-left: 10px;
+        }
+        
+        .toc-part {
+            font-weight: 600;
+            font-size: 12pt;
+            color: #1a1a2e;
+            margin-top: 15px;
+        }
+        
+        .toc-chapter {
+            padding-left: 20px;
+            font-size: 11pt;
+        }
+        
+        .toc-section {
+            padding-left: 40px;
+            font-size: 10pt;
+            color: #666;
+        }
+        
+        /* Headings */
+        h1 {
+            font-size: 24pt;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #e53935;
+            string-set: doctitle content();
+            page-break-after: avoid;
+        }
+        
+        h2 {
+            font-size: 16pt;
+            font-weight: 600;
+            color: #16213e;
+            margin: 30px 0 15px;
+            padding-left: 15px;
+            border-left: 4px solid #e53935;
+            page-break-after: avoid;
+        }
+        
+        h3 {
+            font-size: 13pt;
+            font-weight: 600;
+            color: #333;
+            margin: 25px 0 12px;
+            page-break-after: avoid;
+        }
+        
+        h4 {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #444;
+            margin: 20px 0 10px;
+        }
+        
+        /* Paragraphs */
+        p {
+            margin: 12px 0;
+        }
+        
+        /* Lists */
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        /* Code Blocks */
+        pre {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 9.5pt;
+            line-height: 1.5;
+            max-width: 100%;
+            page-break-inside: avoid;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 9.5pt;
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #e53935;
+            word-break: break-word;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #333;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 10pt;
+            max-width: 100%;
+            page-break-inside: avoid;
+        }
+        
+        thead {
+            display: table-header-group;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tr {
+            page-break-inside: avoid;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: 2px solid #333;
+        }
+        
+        caption {
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        caption::before {
+            content: attr(data-label) "  ";
+            font-weight: bold;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            page-break-inside: avoid;
+        }
+        
+        .info-box-title {
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 8px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            page-break-inside: avoid;
+        }
+        
+        .warning-box-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+        
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            page-break-inside: avoid;
+        }
+        
+        .tip-box-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+        
+        .important-box {
+            background: #fce4ec;
+            border-left: 4px solid #e91e63;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            page-break-inside: avoid;
+        }
+        
+        .important-box-title {
+            font-weight: 600;
+            color: #c2185b;
+            margin-bottom: 8px;
+        }
+        
+        /* Figures */
+        figure {
+            margin: 25px 0;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+        
+        figure img, figure svg {
+            max-width: 80%;
+            max-height: 40vh;
+            height: auto;
+        }
+        
+        figcaption {
+            font-size: 10pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        figcaption::before {
+            content: attr(data-label) "  ";
+            font-weight: bold;
+        }
+        
+        /* Chapter Intro */
+        .chapter-intro {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0 30px;
+            border-left: 5px solid #e53935;
+        }
+        
+        .chapter-intro p {
+            margin: 0;
+            font-size: 11pt;
+            color: #555;
+        }
+        
+        /* Learning Objectives */
+        .objectives {
+            background: #f8f9fa;
+            padding: 20px 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .objectives-title {
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            font-size: 12pt;
+        }
+        
+        .objectives ul {
+            margin: 0;
+        }
+        
+        /* Practice Exercise */
+        .exercise {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            page-break-inside: avoid;
+        }
+        
+        .exercise-title {
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 10px;
+            font-size: 12pt;
+        }
+        
+        /* Key Takeaways */
+        .takeaways {
+            background: #e8f5e9;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin: 25px 0;
+        }
+        
+        .takeaways-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 12px;
+            font-size: 12pt;
+        }
+        
+        /* Syntax Box */
+        .syntax {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10pt;
+            border-radius: 0 6px 6px 0;
+            page-break-inside: avoid;
+        }
+        
+        /* Output Box */
+        .output {
+            background: #263238;
+            color: #aed581;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+        
+        .output-label {
+            color: #90a4ae;
+            font-size: 8pt;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        /* Part Divider */
+        .part-divider {
+            page-break-before: always;
+            text-align: center;
+            padding: 100px 0;
+        }
+        
+        .part-number {
+            font-size: 14pt;
+            color: #e53935;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        
+        .part-title {
+            font-size: 28pt;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+        }
+        
+        .part-desc {
+            font-size: 12pt;
+            color: #666;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        /* Prevent overflow */
+        pre, table, figure, img, svg, blockquote {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        a { word-break: break-all; color: #e53935; }
+        
+        /* Strong and Emphasis */
+        strong { color: #1a1a2e; }
+        
+        em { color: #555; }
+        
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid #e9ecef;
+            margin: 30px 0;
+        }
+        
+        /* Definition List */
+        dl {
+            margin: 15px 0;
+        }
+        
+        dt {
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-top: 15px;
+        }
+        
+        dd {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+        
+        /* Mermaid */
+        .mermaid {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover">
+        <div class="cover-grid"></div>
+        <div class="cover-shapes">
+            <div class="shape-1"></div>
+            <div class="shape-2"></div>
+            <div class="shape-3"></div>
+            <div class="shape-4"></div>
+        </div>
+        <div class="cover-content">
+            <div class="cover-badge">Complete Programming Guide</div>
+            <h1 class="cover-title">The Complete Roblox Lua Programming Documentary</h1>
+            <p class="cover-subtitle">From Absolute Beginner to Advanced Game Developer<br>A Comprehensive Journey Through Roblox Scripting</p>
+            <div class="cover-divider"></div>
+            <div class="cover-meta">
+                <p>Master Lua Programming for Roblox Game Development</p>
+                <p>Learn by Building Real Games and Experiences</p>
+            </div>
+            <div class="cover-edition">2024 Professional Edition</div>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc-page">
+        <h1 class="toc-title">Table of Contents</h1>
+        <ul class="toc">
+            <li class="toc-part"><a href="#part1">Part I: Foundations</a></li>
+            <li class="toc-chapter"><a href="#ch1">Chapter 1: Introduction to Roblox and Lua</a></li>
+            <li class="toc-chapter"><a href="#ch2">Chapter 2: Setting Up Your Development Environment</a></li>
+            <li class="toc-chapter"><a href="#ch3">Chapter 3: Lua Fundamentals - Variables and Data Types</a></li>
+            <li class="toc-chapter"><a href="#ch4">Chapter 4: Operators and Expressions</a></li>
+            
+            <li class="toc-part"><a href="#part2">Part II: Core Programming Concepts</a></li>
+            <li class="toc-chapter"><a href="#ch5">Chapter 5: Control Flow - Making Decisions</a></li>
+            <li class="toc-chapter"><a href="#ch6">Chapter 6: Loops and Iteration</a></li>
+            <li class="toc-chapter"><a href="#ch7">Chapter 7: Functions and Scope</a></li>
+            <li class="toc-chapter"><a href="#ch8">Chapter 8: Tables - Lua's Powerful Data Structure</a></li>
+            
+            <li class="toc-part"><a href="#part3">Part III: Object-Oriented Programming</a></li>
+            <li class="toc-chapter"><a href="#ch9">Chapter 9: Understanding OOP in Lua</a></li>
+            <li class="toc-chapter"><a href="#ch10">Chapter 10: Metatables and Metamethods</a></li>
+            <li class="toc-chapter"><a href="#ch11">Chapter 11: Building Reusable Modules</a></li>
+            
+            <li class="toc-part"><a href="#part4">Part IV: Roblox API Mastery</a></li>
+            <li class="toc-chapter"><a href="#ch12">Chapter 12: Understanding the Roblox API</a></li>
+            <li class="toc-chapter"><a href="#ch13">Chapter 13: Working with Services</a></li>
+            <li class="toc-chapter"><a href="#ch14">Chapter 14: The Instance Hierarchy</a></li>
+            <li class="toc-chapter"><a href="#ch15">Chapter 15: Properties, Methods, and Events</a></li>
+            
+            <li class="toc-part"><a href="#part5">Part V: Game Development Essentials</a></li>
+            <li class="toc-chapter"><a href="#ch16">Chapter 16: Part Manipulation and 3D Space</a></li>
+            <li class="toc-chapter"><a href="#ch17">Chapter 17: Events and Event Handling</a></li>
+            <li class="toc-chapter"><a href="#ch18">Chapter 18: GUI Development</a></li>
+            <li class="toc-chapter"><a href="#ch19">Chapter 19: Physics and Constraints</a></li>
+            
+            <li class="toc-part"><a href="#part6">Part VI: Advanced Scripting</a></li>
+            <li class="toc-chapter"><a href="#ch20">Chapter 20: RemoteEvents and RemoteFunctions</a></li>
+            <li class="toc-chapter"><a href="#ch21">Chapter 21: Client-Server Communication</a></li>
+            <li class="toc-chapter"><a href="#ch22">Chapter 22: Advanced Module Systems</a></li>
+            
+            <li class="toc-part"><a href="#part7">Part VII: Professional Development</a></li>
+            <li class="toc-chapter"><a href="#ch23">Chapter 23: Code Organization and Architecture</a></li>
+            <li class="toc-chapter"><a href="#ch24">Chapter 24: Performance Optimization</a></li>
+            <li class="toc-chapter"><a href="#ch25">Chapter 25: Security and Anti-Exploit</a></li>
+            <li class="toc-chapter"><a href="#ch26">Chapter 26: Debugging and Error Handling</a></li>
+            
+            <li class="toc-part"><a href="#part8">Part VIII: Building Complete Games</a></li>
+            <li class="toc-chapter"><a href="#ch27">Chapter 27: Game Design Fundamentals</a></li>
+            <li class="toc-chapter"><a href="#ch28">Chapter 28: Complete Project: Obby Game</a></li>
+            <li class="toc-chapter"><a href="#ch29">Chapter 29: Complete Project: Tycoon Game</a></li>
+            <li class="toc-chapter"><a href="#ch30">Chapter 30: Publishing and Monetization</a></li>
+            
+            <li class="toc-part"><a href="#appendix">Appendices</a></li>
+            <li class="toc-chapter"><a href="#app-a">Appendix A: Lua Quick Reference</a></li>
+            <li class="toc-chapter"><a href="#app-b">Appendix B: Roblox API Reference</a></li>
+            <li class="toc-chapter"><a href="#app-c">Appendix C: Common Patterns and Idioms</a></li>
+            <li class="toc-chapter"><a href="#app-d">Appendix D: Resources and Further Learning</a></li>
+        </ul>
+    </div>
+</body>
+</html>
+
+    <!-- PART I: FOUNDATIONS -->
+    <div class="part-divider" id="part1">
+        <div class="part-number">Part I</div>
+        <h1 class="part-title">Foundations</h1>
+        <p class="part-desc">Building a solid understanding of Roblox, Lua, and the fundamentals of programming. This section prepares you for the journey ahead.</p>
+    </div>
+
+    <!-- Chapter 1 -->
+    <h1 id="ch1">Chapter 1: Introduction to Roblox and Lua</h1>
+    
+    <div class="chapter-intro">
+        <p>Welcome to the world of Roblox game development. In this chapter, you will discover what makes Roblox a unique platform for creators and why Lua is the perfect language for bringing your game ideas to life.</p>
+    </div>
+
+    <h2>1.1 What is Roblox?</h2>
+    
+    <p>Roblox is more than just a gaming platform; it is a global ecosystem where millions of players become creators. Launched in 2006, Roblox has grown into one of the largest user-generated content platforms in the world, with over 70 million daily active users and millions of experiences created by its community.</p>
+
+    <p>At its core, Roblox consists of three interconnected components:</p>
+
+    <ul>
+        <li><strong>Roblox Client:</strong> The application players use to join and play experiences</li>
+        <li><strong>Roblox Studio:</strong> The powerful, free development environment where creators build games</li>
+        <li><strong>Roblox Cloud:</strong> The infrastructure that hosts and delivers experiences globally</li>
+    </ul>
+
+    <p>What sets Roblox apart from traditional game development is its accessibility. While creating a game from scratch typically requires extensive programming knowledge, expensive software, and complex deployment processes, Roblox provides an integrated environment where anyone can start building immediately.</p>
+
+    <h2>1.2 Why Learn Roblox Lua?</h2>
+
+    <p>Lua is the scripting language that powers Roblox experiences. But why was Lua chosen, and what makes it ideal for game development?</p>
+
+    <p><strong>Lightweight and Fast:</strong> Lua was designed to be embeddable and efficient. Its small footprint and high performance make it perfect for real-time applications like games where every millisecond counts.</p>
+
+    <p><strong>Easy to Learn:</strong> Lua's syntax is clean and readable. If you have never programmed before, Lua provides a gentle learning curve. If you know other languages, you will appreciate its elegant simplicity.</p>
+
+    <p><strong>Powerful and Flexible:</strong> Despite its simplicity, Lua is a fully capable programming language. It supports multiple programming paradigms including procedural, object-oriented, and functional programming.</p>
+
+    <p><strong>Industry Recognition:</strong> Learning Lua opens doors beyond Roblox. It is used in Adobe products, World of Warcraft, Angry Birds, and many other professional applications.</p>
+
+    <div class="info-box">
+        <div class="info-box-title">Did You Know?</div>
+        <p>Lua means "moon" in Portuguese. It was created in 1993 at the Pontifical Catholic University of Rio de Janeiro, Brazil, by Roberto Ierusalimschy, Luiz Henrique de Figueiredo, and Waldemar Celes.</p>
+    </div>
+
+    <h2>1.3 How Roblox Lua Works</h2>
+
+    <p>When you write Lua code in Roblox Studio, you are creating scripts that control the behavior of objects in your game world. These scripts run within the Roblox engine, which handles rendering, physics, networking, and many other complex tasks.</p>
+
+    <p>Roblox uses a modified version of Lua 5.1 called Luau, which adds type inference, performance improvements, and additional features while maintaining compatibility with standard Lua.</p>
+
+    <p>Scripts in Roblox can run in two contexts:</p>
+
+    <ul>
+        <li><strong>Server Scripts:</strong> Run on Roblox servers, handling game logic, data storage, and authoritative decisions</li>
+        <li><strong>Local Scripts:</strong> Run on each player's device, handling user input, camera control, and visual effects</li>
+    </ul>
+
+    <h2>1.4 Your First Roblox Script</h2>
+
+    <p>Before diving into syntax details, let us look at a simple script to understand what Lua code looks like in Roblox:</p>
+
+    <pre><code>-- This is a comment. It explains what the code does
+-- This script prints a message to the Output window
+
+print("Hello, Roblox World!")
+
+-- Create a variable to store a player's name
+local playerName = "Builder123"
+
+-- Print a personalized greeting
+print("Welcome, " .. playerName .. "!")</code></pre>
+
+    <div class="output">
+        <div class="output-label">Output</div>
+Hello, Roblox World!
+Welcome, Builder123!
+    </div>
+
+    <p>This simple example demonstrates several important concepts: comments, the print function, variables, and string concatenation. Do not worry if these terms are unfamiliar; we will explore each in depth throughout this documentary.</p>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 1.1</div>
+        <p>Open Roblox Studio and create a new place. Insert a Script into ServerScriptService and type the code above. Run the game and check the Output window to see your messages. Try changing the playerName variable to your own name.</p>
+    </div>
+
+    <h2>1.5 The Roblox Community and Resources</h2>
+
+    <p>One of Roblox's greatest strengths is its community. As you learn, you will find:</p>
+
+    <ul>
+        <li><strong>Developer Forum:</strong> The official hub for discussions, announcements, and support</li>
+        <li><strong>Creator Documentation:</strong> Comprehensive API reference and tutorials</li>
+        <li><strong>DevHub:</strong> Structured learning resources from Roblox</li>
+        <li><strong>Community Tutorials:</strong> Countless videos, articles, and courses created by experienced developers</li>
+    </ul>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Roblox is a platform for creating and playing user-generated experiences</li>
+            <li>Lua is the scripting language used in Roblox, known for being lightweight, fast, and easy to learn</li>
+            <li>Scripts can run on the server or locally on each player's device</li>
+            <li>The Roblox community provides extensive resources for learning and support</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 2 -->
+    <h1 id="ch2">Chapter 2: Setting Up Your Development Environment</h1>
+
+    <div class="chapter-intro">
+        <p>Before writing code, you need to understand the tools at your disposal. This chapter guides you through Roblox Studio's interface and helps you configure an efficient workspace.</p>
+    </div>
+
+    <h2>2.1 Installing Roblox Studio</h2>
+
+    <p>Roblox Studio is free and available for Windows and macOS. To install it:</p>
+
+    <ol>
+        <li>Visit the Roblox website and create a free account</li>
+        <li>Navigate to the Create section</li>
+        <li>Click "Start Creating" to download and install Roblox Studio</li>
+        <li>Launch the application and sign in with your account</li>
+    </ol>
+
+    <h2>2.2 Understanding the Studio Interface</h2>
+
+    <p>When you open Roblox Studio, you are greeted with a powerful but potentially overwhelming interface. Let us break down the essential components:</p>
+
+    <h3>The Viewport</h3>
+    <p>The large central area is the 3D viewport where you see and interact with your game world. You can navigate using:</p>
+    <ul>
+        <li><strong>Right-click + drag:</strong> Rotate the camera</li>
+        <li><strong>Middle-click + drag:</strong> Pan the camera</li>
+        <li><strong>Scroll wheel:</strong> Zoom in and out</li>
+        <li><strong>WASD + right-click:</strong> Fly through the scene</li>
+    </ul>
+
+    <h3>The Explorer Panel</h3>
+    <p>Located on the right side by default, the Explorer shows the hierarchy of all objects in your game. This tree structure represents how instances are organized, with Workspace containing visible objects and other services handling various aspects of your experience.</p>
+
+    <h3>The Properties Panel</h3>
+    <p>Below the Explorer, the Properties panel displays editable attributes of the currently selected object. Every instance in Roblox has properties that define its appearance, behavior, and state.</p>
+
+    <h3>The Toolbox</h3>
+    <p>The Toolbox provides access to models, decals, meshes, and plugins created by the community. It is a valuable resource for finding assets to enhance your games.</p>
+
+    <h3>The Output Window</h3>
+    <p>Essential for debugging, the Output window displays messages from your scripts, including print statements and error information. You can open it from the View tab.</p>
+
+    <h3>The Command Bar</h3>
+    <p>The Command Bar at the bottom of the screen allows you to execute Lua code immediately for testing. This is invaluable for experimenting with the API.</p>
+
+    <h2>2.3 Script Locations in Roblox</h2>
+
+    <p>Scripts can be placed in various locations, each with specific purposes:</p>
+
+    <table>
+        <caption data-label="Table 2.1">Script Locations and Their Purposes</caption>
+        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Script Type</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ServerScriptService</td>
+                <td>Script</td>
+                <td>Server-side game logic that runs once</td>
+            </tr>
+            <tr>
+                <td>ReplicatedFirst</td>
+                <td>LocalScript</td>
+                <td>Code that runs before the game loads</td>
+            </tr>
+            <tr>
+                <td>StarterPlayerScripts</td>
+                <td>LocalScript</td>
+                <td>Client code that runs for each player</td>
+            </tr>
+            <tr>
+                <td>StarterGui</td>
+                <td>LocalScript</td>
+                <td>GUI-related client code</td>
+            </tr>
+            <tr>
+                <td>Workspace</td>
+                <td>Script or LocalScript</td>
+                <td>Object-specific behavior</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2.4 Creating Your First Script</h2>
+
+    <p>Let us create a script together:</p>
+
+    <ol>
+        <li>In the Explorer, hover over ServerScriptService</li>
+        <li>Click the plus (+) icon that appears</li>
+        <li>Select "Script" from the menu</li>
+        <li>Double-click the new script to open the script editor</li>
+    </ol>
+
+    <p>The script editor is where you will spend much of your time. It includes features like syntax highlighting, auto-completion, and error detection to help you write code efficiently.</p>
+
+    <h2>2.5 Understanding the Output Window</h2>
+
+    <p>The Output window is your primary debugging tool. Let us write code that demonstrates its use:</p>
+
+    <pre><code>-- Place this in a ServerScript
+print("Script started!")
+
+local number = 42
+print("The number is: " .. number)
+
+-- Intentional error to demonstrate output
+local result = number + "string"  -- This will cause an error</code></pre>
+
+    <div class="warning-box">
+        <div class="warning-box-title">Understanding Errors</div>
+        <p>When you make a mistake, Roblox displays an error message in the Output window. These messages typically include the error type, the line number, and a description. Learning to read errors is a crucial skill for debugging.</p>
+    </div>
+
+    <h2>2.6 Studio Shortcuts and Efficiency</h2>
+
+    <p>Mastering keyboard shortcuts will significantly speed up your workflow:</p>
+
+    <table>
+        <caption data-label="Table 2.2">Essential Roblox Studio Shortcuts</caption>
+        <thead>
+            <tr>
+                <th>Shortcut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Ctrl + S</td><td>Save your place</td></tr>
+            <tr><td>F5</td><td>Start play solo test</td></tr>
+            <tr><td>F6</td><td>Start play solo in server mode</td></tr>
+            <tr><td>Ctrl + Z</td><td>Undo</td></tr>
+            <tr><td>Ctrl + Shift + Z</td><td>Redo</td></tr>
+            <tr><td>Ctrl + F</td><td>Find in script</td></tr>
+            <tr><td>Ctrl + Shift + F</td><td>Find in all scripts</td></tr>
+            <tr><td>Ctrl + Space</td><td>Trigger auto-complete</td></tr>
+        </tbody>
+    </table>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Roblox Studio is the integrated development environment for creating Roblox experiences</li>
+            <li>The Explorer shows object hierarchy; Properties shows editable attributes</li>
+            <li>The Output window displays script messages and errors</li>
+            <li>Scripts have specific locations based on whether they run on server or client</li>
+            <li>Keyboard shortcuts dramatically improve development speed</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 3 -->
+    <h1 id="ch3">Chapter 3: Lua Fundamentals - Variables and Data Types</h1>
+
+    <div class="chapter-intro">
+        <p>Variables and data types are the building blocks of programming. This chapter covers everything you need to know about storing and working with information in Lua.</p>
+    </div>
+
+    <h2>3.1 What Are Variables?</h2>
+
+    <p>A variable is a named container that stores a value. Think of it as a labeled box where you can put data and retrieve it later by name. In Lua, you create variables using the <code>local</code> keyword:</p>
+
+    <pre><code>-- Creating variables
+local playerName = "Alex"
+local playerScore = 1000
+local isVIP = true
+
+-- Using variables
+print(playerName)        -- Output: Alex
+print(playerScore)       -- Output: 1000
+print(isVIP)             -- Output: true</code></pre>
+
+    <p>The <code>local</code> keyword creates a variable with limited scope, meaning it is only accessible within its defined region. This is the recommended practice in Roblox as it improves performance and prevents naming conflicts.</p>
+
+    <h2>3.2 Lua Data Types</h2>
+
+    <p>Lua has eight basic data types. Understanding each is essential for effective programming:</p>
+
+    <h3>Nil</h3>
+    <p>Nil represents the absence of a value. It is the default value for uninitialized variables.</p>
+    <pre><code>local emptyVariable
+print(emptyVariable)  -- Output: nil
+
+-- You can explicitly set something to nil
+local temporaryData = "some data"
+temporaryData = nil  -- Now eligible for garbage collection</code></pre>
+
+    <h3>Boolean</h3>
+    <p>Booleans represent true or false values, essential for decision-making in code.</p>
+    <pre><code>local hasKey = true
+local doorLocked = false
+
+print(hasKey)      -- Output: true
+print(doorLocked)  -- Output: false</code></pre>
+
+    <h3>Number</h3>
+    <p>Lua uses double-precision floating-point numbers for all numeric values. This includes integers, decimals, and scientific notation.</p>
+    <pre><code>local integer = 42
+local decimal = 3.14159
+local negative = -100
+local scientific = 1.5e10  -- 15,000,000,000
+
+print(integer + decimal)  -- Output: 45.14159</code></pre>
+
+    <h3>String</h3>
+    <p>Strings are sequences of characters used for text. They can be enclosed in single or double quotes.</p>
+    <pre><code>local singleQuotes = 'Hello'
+local doubleQuotes = "World"
+local multiline = [[
+    This is a
+    multi-line string
+]]
+
+-- String concatenation uses ..
+local greeting = singleQuotes .. " " .. doubleQuotes
+print(greeting)  -- Output: Hello World</code></pre>
+
+    <h3>Table</h3>
+    <p>Tables are Lua's universal data structure. They can function as arrays, dictionaries, objects, or combinations thereof. We will explore tables in depth in Chapter 8.</p>
+    <pre><code>local inventory = {"sword", "shield", "potion"}
+local playerData = {
+    name = "Alex",
+    level = 25,
+    health = 100
+}</code></pre>
+
+    <h3>Function</h3>
+    <p>Functions are first-class values in Lua, meaning they can be stored in variables, passed as arguments, and returned from other functions.</p>
+    <pre><code>local function greet(name)
+    return "Hello, " .. name .. "!"
+end
+
+print(greet("Player"))  -- Output: Hello, Player!</code></pre>
+
+    <h3>Userdata</h3>
+    <p>Userdata represents arbitrary C data. In Roblox, this is primarily used for Roblox-specific objects like Parts, Players, and Services.</p>
+    <pre><code>-- workspace is a userdata representing the Workspace service
+local part = workspace.Part
+print(typeof(part))  -- Output: Instance</code></pre>
+
+    <h3>Thread</h3>
+    <p>Threads represent independent lines of execution. In Roblox, these are commonly used through the task library for asynchronous operations.</p>
+    <pre><code>-- Creating a coroutine (cooperative thread)
+local co = coroutine.create(function()
+    print("Running in coroutine")
+end)
+
+coroutine.resume(co)</code></pre>
+
+    <h2>3.3 Variable Naming Rules</h2>
+
+    <p>When naming variables, follow these rules:</p>
+
+    <ul>
+        <li>Names can contain letters, numbers, and underscores</li>
+        <li>Names must begin with a letter or underscore</li>
+        <li>Names are case-sensitive (Score and score are different)</li>
+        <li>Avoid Lua reserved words: and, break, do, else, elseif, end, false, for, function, if, in, local, nil, not, or, repeat, return, then, true, until, while</li>
+    </ul>
+
+    <div class="tip-box">
+        <div class="tip-box-title">Naming Conventions</div>
+        <p>Use camelCase for variables (playerName, maxHealth). Use PascalCase for functions that create objects or modules. Use UPPER_SNAKE_CASE for constants (MAX_PLAYERS, DEFAULT_SPEED).</p>
+    </div>
+
+    <h2>3.4 Type Checking and Conversion</h2>
+
+    <p>You can check a variable's type using the <code>typeof()</code> function (Roblox) or <code>type()</code> function (standard Lua):</p>
+
+    <pre><code>local value = 42
+print(typeof(value))  -- Output: number
+
+value = "hello"
+print(typeof(value))  -- Output: string</code></pre>
+
+    <p>Converting between types:</p>
+
+    <pre><code>-- Number to string
+local num = 42
+local str = tostring(num)  -- "42"
+
+-- String to number
+local str = "3.14"
+local num = tonumber(str)  -- 3.14
+
+-- String to number (invalid returns nil)
+local invalid = tonumber("abc")  -- nil</code></pre>
+
+    <h2>3.5 Constants in Roblox</h2>
+
+    <p>While Lua does not have true constants, Roblox provides the <code>const</code> keyword in Luau for values that should not change:</p>
+
+    <pre><code>local MAX_HEALTH = 100
+local GAME_VERSION = "1.0.0"
+local PI = 3.14159
+
+-- Convention: uppercase with underscores indicates intent</code></pre>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 3.1</div>
+        <p>Create variables to store player information: name (string), level (number), isOnline (boolean), and inventory (table with at least 3 items). Print each variable to verify the values.</p>
+    </div>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 3.2</div>
+        <p>Write a script that converts a string "100" to a number, adds 50 to it, then converts the result back to a string with the message "Final score: " prefix.</p>
+    </div>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Variables store data using the local keyword for proper scoping</li>
+            <li>Lua has eight data types: nil, boolean, number, string, table, function, userdata, thread</li>
+            <li>Strings can use single quotes, double quotes, or double brackets for multiline</li>
+            <li>Use typeof() to check variable types</li>
+            <li>Use tostring() and tonumber() for type conversions</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 4 -->
+    <h1 id="ch4">Chapter 4: Operators and Expressions</h1>
+
+    <div class="chapter-intro">
+        <p>Operators allow you to manipulate data and create expressions. This chapter covers all the operators available in Lua and how to use them effectively.</p>
+    </div>
+
+    <h2>4.1 Arithmetic Operators</h2>
+
+    <p>Arithmetic operators perform mathematical calculations:</p>
+
+    <table>
+        <caption data-label="Table 4.1">Arithmetic Operators in Lua</caption>
+        <thead>
+            <tr>
+                <th>Operator</th>
+                <th>Description</th>
+                <th>Example</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>+</td><td>Addition</td><td>5 + 3</td><td>8</td></tr>
+            <tr><td>-</td><td>Subtraction</td><td>10 - 4</td><td>6</td></tr>
+            <tr><td>*</td><td>Multiplication</td><td>6 * 7</td><td>42</td></tr>
+            <tr><td>/</td><td>Division</td><td>15 / 4</td><td>3.75</td></tr>
+            <tr><td>^</td><td>Exponentiation</td><td>2 ^ 3</td><td>8</td></tr>
+            <tr><td>%</td><td>Modulo (remainder)</td><td>17 % 5</td><td>2</td></tr>
+            <tr><td>-</td><td>Unary negation</td><td>-10</td><td>-10</td></tr>
+        </tbody>
+    </table>
+
+    <pre><code>-- Basic arithmetic
+local health = 100
+local damage = 25
+local newHealth = health - damage  -- 75
+
+-- Multiplication and division
+local speed = 10
+local boostMultiplier = 1.5
+local boostedSpeed = speed * boostMultiplier  -- 15
+
+-- Modulo is useful for cycling
+local currentFrame = 0
+local totalFrames = 60
+currentFrame = (currentFrame + 1) % totalFrames  -- Cycles 0-59
+
+-- Exponentiation
+local baseDamage = 10
+local criticalMultiplier = 2 ^ 2  -- 4x damage on critical hit</code></pre>
+
+    <h2>4.2 Comparison Operators</h2>
+
+    <p>Comparison operators compare values and return boolean results:</p>
+
+    <table>
+        <caption data-label="Table 4.2">Comparison Operators in Lua</caption>
+        <thead>
+            <tr>
+                <th>Operator</th>
+                <th>Description</th>
+                <th>Example</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>==</td><td>Equal to</td><td>5 == 5</td><td>true</td></tr>
+            <tr><td>~=</td><td>Not equal to</td><td>5 ~= 3</td><td>true</td></tr>
+            <tr><td>&lt;</td><td>Less than</td><td>3 &lt; 5</td><td>true</td></tr>
+            <tr><td>&gt;</td><td>Greater than</td><td>10 &gt; 5</td><td>true</td></tr>
+            <tr><td>&lt;=</td><td>Less than or equal</td><td>5 &lt;= 5</td><td>true</td></tr>
+            <tr><td>&gt;=</td><td>Greater than or equal</td><td>7 &gt;= 5</td><td>true</td></tr>
+        </tbody>
+    </table>
+
+    <pre><code>local playerLevel = 25
+local requiredLevel = 20
+
+-- Check if player meets level requirement
+local canEnter = playerLevel >= requiredLevel  -- true
+
+-- Check for equality
+local targetName = "Dragon"
+local currentTarget = "Dragon"
+local isCorrectTarget = targetName == currentTarget  -- true
+
+-- Not equal check
+local status = "offline"
+local isOnline = status ~= "offline"  -- false</code></pre>
+
+    <div class="important-box">
+        <div class="important-box-title">Important Note</div>
+        <p>In Lua, the not-equal operator is ~= (tilde equals), not != like in many other languages. Using != will cause a syntax error.</p>
+    </div>
+
+    <h2>4.3 Logical Operators</h2>
+
+    <p>Logical operators combine boolean expressions:</p>
+
+    <table>
+        <caption data-label="Table 4.3">Logical Operators in Lua</caption>
+        <thead>
+            <tr>
+                <th>Operator</th>
+                <th>Description</th>
+                <th>Behavior</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>and</td><td>Logical AND</td><td>Returns first operand if false/nil, otherwise second</td></tr>
+            <tr><td>or</td><td>Logical OR</td><td>Returns first operand if not false/nil, otherwise second</td></tr>
+            <tr><td>not</td><td>Logical NOT</td><td>Inverts the boolean value</td></tr>
+        </tbody>
+    </table>
+
+    <pre><code>-- AND: Both conditions must be true
+local hasKey = true
+local doorUnlocked = false
+local canEnter = hasKey and doorUnlocked  -- false
+
+-- OR: At least one condition must be true
+local isAdmin = false
+local isModerator = true
+local hasPrivileges = isAdmin or isModerator  -- true
+
+-- NOT: Inverts the value
+local isPaused = false
+local isRunning = not isPaused  -- true
+
+-- Short-circuit evaluation
+local result = nil or "default"  -- "default" (nil is falsy)
+local value = "exists" or "fallback"  -- "exists" (truthy)</code></pre>
+
+    <h2>4.4 String Operators</h2>
+
+    <p>The concatenation operator joins strings:</p>
+
+    <pre><code>-- Concatenation with ..
+local firstName = "John"
+local lastName = "Doe"
+local fullName = firstName .. " " .. lastName  -- "John Doe"
+
+-- Concatenating numbers (automatically converted)
+local score = 1000
+local message = "Your score: " .. score  -- "Your score: 1000"
+
+-- Length operator #
+local text = "Hello"
+local length = #text  -- 5
+
+-- String repetition (Luau feature)
+local line = "-"
+local separator = line:rep(20)  -- "--------------------"</code></pre>
+
+    <h2>4.5 Operator Precedence</h2>
+
+    <p>Operators are evaluated in a specific order. Use parentheses to control evaluation:</p>
+
+    <pre><code>-- Without parentheses
+local result = 5 + 3 * 2  -- 11 (multiplication first)
+
+-- With parentheses
+local result = (5 + 3) * 2  -- 16
+
+-- Complex expression
+local health = 100
+local damage = 25
+local armor = 10
+local finalDamage = damage - (armor * 0.5)  -- 20</code></pre>
+
+    <h2>4.6 Compound Assignment Operators</h2>
+
+    <p>Luau supports compound assignment operators for cleaner code:</p>
+
+    <pre><code>local score = 100
+
+-- Traditional way
+score = score + 50
+
+-- Compound assignment (Luau)
+score += 50  -- Equivalent to score = score + 50
+score -= 10  -- Subtract
+score *= 2   -- Multiply
+score /= 2   -- Divide</code></pre>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 4.1</div>
+        <p>Create a simple damage calculator. Given baseDamage = 50, criticalChance = 0.3, and armor = 15, calculate the final damage. If critical hit (random < criticalChance), multiply damage by 2. Then subtract armor reduction (armor * 0.5).</p>
+    </div>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 4.2</div>
+        <p>Write code that checks if a player can join a VIP room. Requirements: level >= 50 AND (hasVIPPass OR isDeveloper). Test with different combinations of values.</p>
+    </div>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Arithmetic operators: +, -, *, /, ^, % for mathematical operations</li>
+            <li>Comparison operators: ==, ~=, <, >, <=, >= return boolean values</li>
+            <li>Logical operators: and, or, not combine boolean expressions</li>
+            <li>String concatenation uses the .. operator</li>
+            <li>Use parentheses to control operator precedence</li>
+            <li>Compound assignment operators (+=, -=, etc.) make code cleaner</li>
+        </ul>
+    </div>
+
+
+
+    <!-- PART II: CORE PROGRAMMING CONCEPTS -->
+    <div class="part-divider" id="part2">
+        <div class="part-number">Part II</div>
+        <h1 class="part-title">Core Programming Concepts</h1>
+        <p class="part-desc">Master the fundamental building blocks of programming: making decisions, repeating actions, organizing code with functions, and working with data structures.</p>
+    </div>
+
+    <!-- Chapter 5 -->
+    <h1 id="ch5">Chapter 5: Control Flow - Making Decisions</h1>
+
+    <div class="chapter-intro">
+        <p>Programs need to make decisions based on conditions. This chapter explores Lua's control flow statements that enable your code to respond dynamically to different situations.</p>
+    </div>
+
+    <h2>5.1 The if Statement</h2>
+
+    <p>The if statement executes code only when a condition is true:</p>
+
+    <div class="syntax">
+        <strong>Syntax:</strong><br>
+        if condition then<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code to execute<br>
+        end
+    </div>
+
+    <pre><code>local playerHealth = 25
+local maxHealth = 100
+
+-- Simple if statement
+if playerHealth < maxHealth * 0.3 then
+    print("Warning: Low health!")
+end</code></pre>
+
+    <h2>5.2 The if-else Statement</h2>
+
+    <p>Use else to provide an alternative when the condition is false:</p>
+
+    <div class="syntax">
+        <strong>Syntax:</strong><br>
+        if condition then<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code when true<br>
+        else<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code when false<br>
+        end
+    </div>
+
+    <pre><code>local hasPermission = false
+
+if hasPermission then
+    print("Access granted")
+else
+    print("Access denied")
+end</code></pre>
+
+    <h2>5.3 The if-elseif-else Statement</h2>
+
+    <p>Chain multiple conditions with elseif:</p>
+
+    <div class="syntax">
+        <strong>Syntax:</strong><br>
+        if condition1 then<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code for condition1<br>
+        elseif condition2 then<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code for condition2<br>
+        elseif condition3 then<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code for condition3<br>
+        else<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- default code<br>
+        end
+    </div>
+
+    <pre><code>local playerLevel = 45
+
+if playerLevel < 10 then
+    print("Beginner rank")
+elseif playerLevel < 30 then
+    print("Intermediate rank")
+elseif playerLevel < 60 then
+    print("Advanced rank")
+else
+    print("Expert rank")
+end</code></pre>
+
+    <h2>5.4 Nested if Statements</h2>
+
+    <p>You can place if statements inside other if statements:</p>
+
+    <pre><code>local isLoggedIn = true
+local accountAge = 30
+local hasVerifiedEmail = true
+
+if isLoggedIn then
+    if accountAge >= 7 then
+        if hasVerifiedEmail then
+            print("You can trade items")
+        else
+            print("Please verify your email to trade")
+        end
+    else
+        print("Account must be at least 7 days old to trade")
+    end
+else
+    print("Please log in to trade")
+end</code></pre>
+
+    <h2>5.5 Logical Operators in Conditions</h2>
+
+    <p>Combine conditions with and, or, and not:</p>
+
+    <pre><code>local level = 50
+local hasQuestItem = true
+local questCompleted = false
+
+-- Using AND: both conditions must be true
+if level >= 40 and hasQuestItem then
+    print("You can enter the dungeon")
+end
+
+-- Using OR: at least one condition must be true
+if level >= 60 or questCompleted then
+    print("You have VIP access")
+end
+
+-- Combining operators
+local isAdmin = false
+local isModerator = true
+local isBanned = false
+
+if (isAdmin or isModerator) and not isBanned then
+    print("Moderation tools available")
+end</code></pre>
+
+    <h2>5.6 Ternary-like Expressions</h2>
+
+    <p>Lua does not have a traditional ternary operator, but you can achieve similar results:</p>
+
+    <pre><code>local score = 85
+
+-- Traditional if-else
+local grade
+if score >= 60 then
+    grade = "Pass"
+else
+    grade = "Fail"
+end
+
+-- Using and/or pattern (ternary-like)
+local grade = score >= 60 and "Pass" or "Fail"
+
+-- Another example
+local playerName = nil
+local displayName = playerName or "Guest"  -- "Guest" if playerName is nil</code></pre>
+
+    <div class="warning-box">
+        <div class="warning-box-title">Caution with Ternary Pattern</div>
+        <p>The and/or pattern only works reliably when the "true" value is not false or nil. For complex cases, use explicit if-else statements for clarity.</p>
+    </div>
+
+    <h2>5.7 Practical Examples in Roblox</h2>
+
+    <pre><code>-- Check if player can afford an item
+local playerMoney = 500
+local itemPrice = 300
+
+if playerMoney >= itemPrice then
+    playerMoney = playerMoney - itemPrice
+    print("Purchase successful! Remaining: " .. playerMoney)
+else
+    local needed = itemPrice - playerMoney
+    print("Insufficient funds. Need " .. needed .. " more")
+end
+
+-- Validate player input
+local username = "Player123"
+
+if #username < 3 then
+    print("Username too short")
+elseif #username > 20 then
+    print("Username too long")
+elseif username:find(" ") then
+    print("Username cannot contain spaces")
+else
+    print("Username valid!")
+end</code></pre>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 5.1</div>
+        <p>Write a script that determines a player's rank based on their score: Bronze (0-999), Silver (1000-4999), Gold (5000-9999), Platinum (10000+). Include appropriate messages for each rank.</p>
+    </div>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 5.2</div>
+        <p>Create a door access system that checks: player has key card OR security level >= 5, AND player is not on the blacklist.</p>
+    </div>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>if statements execute code based on conditions</li>
+            <li>else provides an alternative path when the condition is false</li>
+            <li>elseif allows checking multiple conditions in sequence</li>
+            <li>Use logical operators (and, or, not) to combine conditions</li>
+            <li>The and/or pattern can simulate ternary operators for simple cases</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 6 -->
+    <h1 id="ch6">Chapter 6: Loops and Iteration</h1>
+
+    <div class="chapter-intro">
+        <p>Loops allow code to repeat, which is essential for processing collections, creating animations, and implementing game mechanics. This chapter covers all loop types in Lua.</p>
+    </div>
+
+    <h2>6.1 The while Loop</h2>
+
+    <p>A while loop repeats as long as its condition remains true:</p>
+
+    <div class="syntax">
+        <strong>Syntax:</strong><br>
+        while condition do<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code to repeat<br>
+        end
+    </div>
+
+    <pre><code>-- Countdown timer
+local countdown = 10
+
+while countdown > 0 do
+    print("Time remaining: " .. countdown)
+    countdown = countdown - 1
+    task.wait(1)  -- Wait 1 second (Roblox function)
+end
+
+print("Go!")
+
+-- Health regeneration
+local health = 50
+local maxHealth = 100
+
+while health < maxHealth do
+    health = health + 5
+    print("Health: " .. health)
+    task.wait(0.5)
+end</code></pre>
+
+    <div class="warning-box">
+        <div class="warning-box-title">Infinite Loops</div>
+        <p>Ensure your while loop condition eventually becomes false. In Roblox, infinite loops without yielding (task.wait) will freeze the game.</p>
+    </div>
+
+    <h2>6.2 The repeat-until Loop</h2>
+
+    <p>A repeat loop executes at least once, then continues until its condition becomes true:</p>
+
+    <div class="syntax">
+        <strong>Syntax:</strong><br>
+        repeat<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code to repeat<br>
+        until condition
+    </div>
+
+    <pre><code>-- Password validation (must try at least once)
+local correctPassword = "secret123"
+local attempts = 0
+local input
+
+repeat
+    attempts = attempts + 1
+    input = "secret123"  -- Simulated input
+    print("Attempt " .. attempts)
+until input == correctPassword or attempts >= 3
+
+print(attempts < 3 and "Access granted!" or "Account locked!")
+
+-- Dice roll until we get a 6
+local rolls = 0
+local roll
+
+repeat
+    roll = math.random(1, 6)
+    rolls = rolls + 1
+    print("Rolled: " .. roll)
+until roll == 6
+
+print("Got 6 in " .. rolls .. " rolls!")</code></pre>
+
+    <h2>6.3 The for Loop (Numeric)</h2>
+
+    <p>The numeric for loop iterates a specific number of times:</p>
+
+    <div class="syntax">
+        <strong>Syntax:</strong><br>
+        for variable = start, finish, step do<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- code to repeat<br>
+        end
+    </div>
+
+    <pre><code>-- Basic counting
+for i = 1, 5 do
+    print("Iteration " .. i)
+end
+
+-- With custom step (count by 2s)
+for i = 0, 10, 2 do
+    print(i)  -- 0, 2, 4, 6, 8, 10
+end
+
+-- Counting backwards
+for i = 10, 1, -1 do
+    print(i)  -- 10, 9, 8, ... 1
+end
+
+-- Creating a grid
+for row = 1, 3 do
+    for col = 1, 3 do
+        print("Cell (" .. row .. ", " .. col .. ")")
+    end
+end</code></pre>
+
+    <h2>6.4 The for Loop (Generic)</h2>
+
+    <p>The generic for loop iterates over collections using iterators:</p>
+
+    <pre><code>-- Iterating over an array
+local fruits = {"apple", "banana", "cherry"}
+
+for index, value in ipairs(fruits) do
+    print(index .. ": " .. value)
+end
+
+-- Iterating over a dictionary
+local playerData = {
+    name = "Alex",
+    level = 25,
+    health = 100
+}
+
+for key, value in pairs(playerData) do
+    print(key .. " = " .. tostring(value))
+end
+
+-- Using string.gmatch for text processing
+local text = "apple, banana, cherry"
+for fruit in text:gmatch("[^, ]+") do
+    print(fruit)
+end</code></pre>
+
+    <div class="info-box">
+        <div class="info-box-title">ipairs vs pairs</div>
+        <p>Use ipairs for arrays (ordered, numeric indices starting at 1). Use pairs for dictionaries (unordered, any key type). ipairs stops at the first nil, while pairs iterates all non-nil keys.</p>
+    </div>
+
+    <h2>6.5 Loop Control: break and continue</h2>
+
+    <p>Control loop execution flow:</p>
+
+    <pre><code>-- break: exit the loop immediately
+for i = 1, 100 do
+    if i > 10 then
+        break  -- Stop after 10
+    end
+    print(i)
+end
+
+-- continue: skip to next iteration (Luau)
+for i = 1, 10 do
+    if i % 2 == 0 then
+        continue  -- Skip even numbers
+    end
+    print(i)  -- Only odd numbers: 1, 3, 5, 7, 9
+end
+
+-- Finding a specific player
+local players = {"Alice", "Bob", "Charlie", "Diana"}
+local target = "Charlie"
+
+for i, name in ipairs(players) do
+    if name == target then
+        print("Found " .. target .. " at position " .. i)
+        break
+    end
+end</code></pre>
+
+    <h2>6.6 Practical Loop Applications</h2>
+
+    <pre><code>-- Spawn multiple enemies
+for i = 1, 5 do
+    local enemy = Instance.new("Part")
+    enemy.Name = "Enemy" .. i
+    enemy.Position = Vector3.new(i * 10, 5, 0)
+    enemy.Parent = workspace
+end
+
+-- Calculate average score
+local scores = {85, 92, 78, 95, 88}
+local total = 0
+
+for _, score in ipairs(scores) do
+    total = total + score
+end
+
+local average = total / #scores
+print("Average: " .. average)
+
+-- Process inventory items
+local inventory = {
+    {name = "Sword", quantity = 1},
+    {name = "Potion", quantity = 5},
+    {name = "Shield", quantity = 1}
+}
+
+for _, item in ipairs(inventory) do
+    print(item.name .. " x" .. item.quantity)
+end</code></pre>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 6.1</div>
+        <p>Create a multiplication table for numbers 1-10 using nested for loops. Display it in a formatted grid.</p>
+    </div>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 6.2</div>
+        <p>Write a script that finds all prime numbers between 1 and 100 using a loop and conditional checks.</p>
+    </div>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>while loops repeat while a condition is true</li>
+            <li>repeat-until loops execute at least once</li>
+            <li>Numeric for loops iterate a specific number of times</li>
+            <li>Generic for loops (ipairs/pairs) iterate over collections</li>
+            <li>break exits a loop; continue skips to the next iteration</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 7 -->
+    <h1 id="ch7">Chapter 7: Functions and Scope</h1>
+
+    <div class="chapter-intro">
+        <p>Functions are the primary mechanism for organizing and reusing code. This chapter explores how to define, call, and master functions in Lua.</p>
+    </div>
+
+    <h2>7.1 Defining Functions</h2>
+
+    <p>Functions encapsulate reusable blocks of code:</p>
+
+    <div class="syntax">
+        <strong>Syntax:</strong><br>
+        local function name(parameter1, parameter2)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-- function body<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;return value  -- optional<br>
+        end
+    </div>
+
+    <pre><code>-- Simple function
+local function greet()
+    print("Hello, welcome to the game!")
+end
+
+greet()  -- Call the function
+
+-- Function with parameters
+local function greetPlayer(name)
+    print("Hello, " .. name .. "!")
+end
+
+greetPlayer("Alex")   -- Output: Hello, Alex!
+greetPlayer("Sam")    -- Output: Hello, Sam!
+
+-- Function with return value
+local function add(a, b)
+    return a + b
+end
+
+local sum = add(5, 3)
+print(sum)  -- Output: 8</code></pre>
+
+    <h2>7.2 Multiple Parameters and Returns</h2>
+
+    <p>Functions can accept multiple inputs and return multiple outputs:</p>
+
+    <pre><code>-- Multiple parameters
+local function calculateDamage(base, multiplier, bonus)
+    return base * multiplier + bonus
+end
+
+local damage = calculateDamage(10, 1.5, 5)  -- 20
+
+-- Multiple return values
+local function getPlayerStats()
+    local health = 100
+    local mana = 50
+    local stamina = 75
+    return health, mana, stamina
+end
+
+local hp, mp, sp = getPlayerStats()
+print("HP:", hp, "MP:", mp, "SP:", sp)
+
+-- Using only some return values
+local healthOnly = getPlayerStats()  -- Gets just health</code></pre>
+
+    <h2>7.3 Default Parameters</h2>
+
+    <p>Lua does not have built-in default parameters, but you can simulate them:</p>
+
+    <pre><code>-- Using the or operator for defaults
+local function createPlayer(name, level, class)
+    level = level or 1  -- Default to 1 if nil
+    class = class or "Warrior"  -- Default to "Warrior"
+    
+    print("Created " .. name .. " the level " .. level .. " " .. class)
+end
+
+createPlayer("Alex")                    -- Alex the level 1 Warrior
+createPlayer("Sam", 10)                 -- Sam the level 10 Warrior
+createPlayer("Jordan", 20, "Mage")      -- Jordan the level 20 Mage</code></pre>
+
+    <h2>7.4 Variable Scope</h2>
+
+    <p>Understanding scope is crucial for writing maintainable code:</p>
+
+    <pre><code>-- Global variable (accessible everywhere)
+globalVar = "I am global"
+
+-- Local variable (limited scope)
+local localVar = "I am local"
+
+local function testScope()
+    -- Can access both global and outer local variables
+    print(globalVar)   -- Works
+    print(localVar)    -- Works
+    
+    -- Local to this function
+    local functionLocal = "Only in function"
+    print(functionLocal)
+end
+
+testScope()
+-- print(functionLocal)  -- Error: nil value
+
+-- Block scope with do-end
+do
+    local blockVar = "Only in this block"
+    print(blockVar)  -- Works
+end
+-- print(blockVar)  -- Error: nil value</code></pre>
+
+    <div class="important-box">
+        <div class="important-box-title">Always Use Local</div>
+        <p>In Roblox, always use local for variables. Global variables are slower, can cause naming conflicts, and make code harder to debug.</p>
+    </div>
+
+    <h2>7.5 First-Class Functions</h2>
+
+    <p>In Lua, functions are values that can be stored, passed, and returned:</p>
+
+    <pre><code>-- Storing functions in variables
+local sayHello = function()
+    print("Hello!")
+end
+
+sayHello()
+
+-- Passing functions as arguments
+local function applyOperation(a, b, operation)
+    return operation(a, b)
+end
+
+local add = function(x, y) return x + y end
+local multiply = function(x, y) return x * y end
+
+print(applyOperation(5, 3, add))       -- 8
+print(applyOperation(5, 3, multiply))  -- 15
+
+-- Returning functions
+local function createMultiplier(factor)
+    return function(number)
+        return number * factor
+    end
+end
+
+local double = createMultiplier(2)
+local triple = createMultiplier(3)
+
+print(double(5))   -- 10
+print(triple(5))   -- 15</code></pre>
+
+    <h2>7.6 Anonymous Functions</h2>
+
+    <p>Functions without names are useful for callbacks and short operations:</p>
+
+    <pre><code>-- Common with event connections in Roblox
+local button = script.Parent
+
+button.MouseButton1Click:Connect(function()
+    print("Button clicked!")
+end)
+
+-- Sorting with custom comparator
+local scores = {45, 92, 78, 95, 88}
+table.sort(scores, function(a, b)
+    return a > b  -- Sort descending
+end)</code></pre>
+
+    <h2>7.7 Recursion</h2>
+
+    <p>Functions can call themselves for recursive algorithms:</p>
+
+    <pre><code>-- Factorial calculation
+local function factorial(n)
+    if n <= 1 then
+        return 1
+    end
+    return n * factorial(n - 1)
+end
+
+print(factorial(5))  -- 120 (5 * 4 * 3 * 2 * 1)
+
+-- Fibonacci sequence
+local function fibonacci(n)
+    if n <= 1 then
+        return n
+    end
+    return fibonacci(n - 1) + fibonacci(n - 2)
+end
+
+for i = 0, 10 do
+    print("F(" .. i .. ") = " .. fibonacci(i))
+end</code></pre>
+
+    <div class="warning-box">
+        <div class="warning-box-title">Stack Overflow</div>
+        <p>Deep recursion can cause stack overflow errors. For large iterations, use loops instead. Roblox has a limited call stack.</p>
+    </div>
+
+    <h2>7.8 Practical Function Patterns</h2>
+
+    <pre><code>-- Validation function
+local function isValidUsername(name)
+    if typeof(name) ~= "string" then return false end
+    if #name < 3 or #name > 20 then return false end
+    if name:find(" ") then return false end
+    return true
+end
+
+-- Configuration function
+local function createPart(config)
+    config = config or {}
+    
+    local part = Instance.new("Part")
+    part.Name = config.name or "Part"
+    part.Size = config.size or Vector3.new(4, 1, 2)
+    part.Position = config.position or Vector3.new(0, 0, 0)
+    part.Color = config.color or Color3.new(1, 1, 1)
+    part.Parent = config.parent or workspace
+    
+    return part
+end
+
+-- Usage
+local platform = createPart({
+    name = "Platform",
+    size = Vector3.new(10, 1, 10),
+    color = Color3.fromRGB(100, 100, 100)
+})</code></pre>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 7.1</div>
+        <p>Create a function calculateStats that takes base stats (health, damage, speed) and a level, then returns the scaled stats using a formula like stat * (1 + level * 0.1).</p>
+    </div>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 7.2</div>
+        <p>Write a recursive function to calculate the sum of all numbers from 1 to n, then rewrite it using a loop. Compare the approaches.</p>
+    </div>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Functions encapsulate reusable code blocks</li>
+            <li>Use return to send values back to the caller</li>
+            <li>Functions can return multiple values</li>
+            <li>Always use local variables for better performance</li>
+            <li>Functions are first-class values in Lua</li>
+            <li>Anonymous functions are useful for callbacks</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 8 -->
+    <h1 id="ch8">Chapter 8: Tables - Lua's Powerful Data Structure</h1>
+
+    <div class="chapter-intro">
+        <p>Tables are Lua's only data structure, yet they are incredibly versatile. This chapter explores how tables work as arrays, dictionaries, objects, and more.</p>
+    </div>
+
+    <h2>8.1 Creating Tables</h2>
+
+    <p>Tables are created using curly braces:</p>
+
+    <pre><code>-- Empty table
+local empty = {}
+
+-- Array-style table (list)
+local fruits = {"apple", "banana", "cherry"}
+
+-- Dictionary-style table (key-value pairs)
+local player = {
+    name = "Alex",
+    level = 25,
+    health = 100
+}
+
+-- Mixed table
+local mixed = {
+    "first item",  -- Index 1
+    "second item", -- Index 2
+    key = "value", -- Key "key"
+    ["another key"] = "another value"
+}</code></pre>
+
+    <h2>8.2 Arrays (Lists)</h2>
+
+    <p>Arrays use numeric indices starting at 1:</p>
+
+    <pre><code>local scores = {85, 92, 78, 95, 88}
+
+-- Accessing elements
+print(scores[1])   -- 85 (first element)
+print(scores[3])   -- 78
+print(#scores)     -- 5 (array length)
+
+-- Modifying elements
+scores[2] = 95
+
+-- Adding elements
+scores[6] = 90
+
+-- Removing elements
+scores[3] = nil  -- Removes the element
+
+-- Iterating with ipairs
+for i, score in ipairs(scores) do
+    print("Score " .. i .. ": " .. score)
+end</code></pre>
+
+    <div class="important-box">
+        <div class="important-box-title">Lua Arrays Start at 1</div>
+        <p>Unlike most programming languages where arrays start at 0, Lua arrays start at index 1. This is a fundamental difference to remember.</p>
+    </div>
+
+    <h2>8.3 Dictionaries (Hash Maps)</h2>
+
+    <p>Dictionaries use any value (except nil) as keys:</p>
+
+    <pre><code>local playerStats = {
+    name = "Alex",
+    level = 25,
+    health = 100,
+    mana = 50,
+    inventory = {"sword", "shield", "potion"}
+}
+
+-- Accessing values
+print(playerStats.name)     -- Alex
+print(playerStats["level"]) -- 25
+
+-- Adding new keys
+playerStats.experience = 5000
+playerStats["class"] = "Warrior"
+
+-- Modifying values
+playerStats.health = 80
+
+-- Removing keys
+playerStats.mana = nil
+
+-- Iterating with pairs
+for key, value in pairs(playerStats) do
+    print(key .. ": " .. tostring(value))
+end</code></pre>
+
+    <h2>8.4 Table Operations</h2>
+
+    <p>The table library provides useful functions:</p>
+
+    <pre><code>local numbers = {3, 1, 4, 1, 5, 9, 2, 6}
+
+-- Sorting
+table.sort(numbers)
+-- Result: {1, 1, 2, 3, 4, 5, 6, 9}
+
+-- Sorting with custom comparator
+local players = {
+    {name = "Alice", score = 85},
+    {name = "Bob", score = 92},
+    {name = "Charlie", score = 78}
+}
+
+table.sort(players, function(a, b)
+    return a.score > b.score  -- Sort by score descending
+end)
+
+-- Inserting elements
+table.insert(numbers, 7)      -- Append to end
+table.insert(numbers, 3, 10)  -- Insert at position 3
+
+-- Removing elements
+table.remove(numbers)         -- Remove last element
+table.remove(numbers, 2)      -- Remove element at index 2
+
+-- Concatenating strings
+local words = {"Hello", "World", "from", "Lua"}
+local sentence = table.concat(words, " ")
+-- Result: "Hello World from Lua"</code></pre>
+
+    <h2>8.5 Nested Tables</h2>
+
+    <p>Tables can contain other tables for complex data structures:</p>
+
+    <pre><code>-- 2D array (matrix)
+local grid = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+}
+
+print(grid[2][3])  -- 6 (row 2, column 3)
+
+-- Complex data structure
+local gameData = {
+    players = {
+        {id = 1, name = "Alex", stats = {wins = 10, losses = 3}},
+        {id = 2, name = "Sam", stats = {wins = 15, losses = 5}}
+    },
+    settings = {
+        maxPlayers = 20,
+        gameMode = "Team Deathmatch",
+        timeLimit = 600
+    },
+    maps = {"Desert", "Forest", "City", "Space Station"}
+}
+
+-- Accessing nested data
+print(gameData.players[1].name)           -- Alex
+print(gameData.players[1].stats.wins)     -- 10
+print(gameData.settings.gameMode)         -- Team Deathmatch</code></pre>
+
+    <h2>8.6 Tables as Objects</h2>
+
+    <p>Tables can represent objects with methods:</p>
+
+    <pre><code>-- Creating an "object"
+local function createPlayer(name)
+    local player = {
+        name = name,
+        health = 100,
+        level = 1,
+        experience = 0
+    }
+    
+    -- Methods
+    function player:takeDamage(amount)
+        self.health = math.max(0, self.health - amount)
+        print(self.name .. " took " .. amount .. " damage!")
+        print("Health: " .. self.health)
+    end
+    
+    function player:heal(amount)
+        self.health = math.min(100, self.health + amount)
+        print(self.name .. " healed for " .. amount)
+    end
+    
+    function player:gainExp(amount)
+        self.experience = self.experience + amount
+        if self.experience >= self.level * 100 then
+            self.level = self.level + 1
+            self.experience = 0
+            print(self.name .. " leveled up to " .. self.level .. "!")
+        end
+    end
+    
+    return player
+end
+
+-- Usage
+local alex = createPlayer("Alex")
+alex:takeDamage(30)
+alex:heal(15)
+alex:gainExp(150)</code></pre>
+
+    <h2>8.7 Table Traversal</h2>
+
+    <p>Different ways to iterate over tables:</p>
+
+    <pre><code>local inventory = {
+    {item = "Sword", quantity = 1},
+    {item = "Potion", quantity = 5},
+    {item = "Shield", quantity = 1}
+}
+
+-- ipairs: ordered numeric indices
+for i, slot in ipairs(inventory) do
+    print(i .. ". " .. slot.item .. " x" .. slot.quantity)
+end
+
+-- pairs: all keys (unordered)
+local playerData = {name = "Alex", level = 25, class = "Warrior"}
+for key, value in pairs(playerData) do
+    print(key .. " = " .. tostring(value))
+end
+
+-- next: manual iteration
+local key, value = next(inventory)
+while key do
+    print("Slot " .. key .. ": " .. value.item)
+    key, value = next(inventory, key)
+end</code></pre>
+
+    <h2>8.8 Common Table Patterns</h2>
+
+    <pre><code>-- Set (unique values only)
+local function createSet(array)
+    local set = {}
+    for _, value in ipairs(array) do
+        set[value] = true
+    end
+    return set
+end
+
+local validItems = createSet({"sword", "shield", "potion", "armor"})
+print(validItems["sword"])   -- true
+print(validItems["invalid"]) -- nil
+
+-- Queue (FIFO)
+local queue = {}
+
+function queue:enqueue(item)
+    table.insert(self, item)
+end
+
+function queue:dequeue()
+    return table.remove(self, 1)
+end
+
+-- Stack (LIFO)
+local stack = {}
+
+function stack:push(item)
+    table.insert(self, item)
+end
+
+function stack:pop()
+    return table.remove(self)
+end</code></pre>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 8.1</div>
+        <p>Create a table representing a deck of cards with suits and ranks. Write functions to shuffle the deck and deal cards to players.</p>
+    </div>
+
+    <div class="exercise">
+        <div class="exercise-title">Practice Exercise 8.2</div>
+        <p>Build a simple inventory system using tables that supports: adding items, removing items, checking quantity, and listing all items.</p>
+    </div>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Tables are Lua's universal data structure</li>
+            <li>Arrays use numeric indices starting at 1</li>
+            <li>Dictionaries use any value as keys</li>
+            <li>Use ipairs for arrays, pairs for dictionaries</li>
+            <li>Tables can be nested for complex data</li>
+            <li>Tables can have methods, acting like objects</li>
+        </ul>
+    </div>
+
+
+
+    <!-- PART III: OBJECT-ORIENTED PROGRAMMING -->
+    <div class="part-divider" id="part3">
+        <div class="part-number">Part III</div>
+        <h1 class="part-title">Object-Oriented Programming</h1>
+        <p class="part-desc">Learn how Lua implements object-oriented programming through prototypes, metatables, and inheritance patterns used throughout Roblox.</p>
+    </div>
+
+    <!-- Chapter 9 -->
+    <h1 id="ch9">Chapter 9: Understanding OOP in Lua</h1>
+
+    <div class="chapter-intro">
+        <p>Object-oriented programming helps organize code into reusable, modular components. While Lua does not have built-in classes, it provides powerful mechanisms for OOP.</p>
+    </div>
+
+    <h2>9.1 Prototype-Based OOP</h2>
+
+    <p>Lua uses prototypes rather than classes. An object is simply a table that can inherit from another table:</p>
+
+    <pre><code>-- Create a prototype (like a class)
+local Animal = {}
+Animal.__index = Animal
+
+-- Constructor
+function Animal.new(name)
+    local self = setmetatable({}, Animal)
+    self.name = name
+    self.health = 100
+    return self
+end
+
+-- Methods
+function Animal:speak()
+    print(self.name .. " makes a sound")
+end
+
+function Animal:takeDamage(amount)
+    self.health = self.health - amount
+    print(self.name .. " health: " .. self.health)
+end
+
+-- Create instances
+local dog = Animal.new("Buddy")
+dog:speak()        -- Buddy makes a sound
+dog:takeDamage(10) -- Buddy health: 90</code></pre>
+
+    <h2>9.2 The self Parameter</h2>
+
+    <p>The colon (:) syntax automatically passes the object as the first parameter:</p>
+
+    <pre><code>-- These are equivalent:
+function Animal:speak() end
+function Animal.speak(self) end
+
+-- Calling methods:
+animal:speak()      -- Passes animal as self
+animal.speak(animal) -- Explicit self</code></pre>
+
+    <h2>9.3 Inheritance</h2>
+
+    <p>Create child prototypes that inherit from parents:</p>
+
+    <pre><code>-- Dog inherits from Animal
+local Dog = setmetatable({}, Animal)
+Dog.__index = Dog
+
+function Dog.new(name, breed)
+    local self = setmetatable(Animal.new(name), Dog)
+    self.breed = breed
+    return self
+end
+
+-- Override parent method
+function Dog:speak()
+    print(self.name .. " barks!")
+end
+
+-- New method specific to Dog
+function Dog:fetch()
+    print(self.name .. " fetches the ball!")
+end
+
+-- Usage
+local myDog = Dog.new("Rex", "German Shepherd")
+myDog:speak()      -- Rex barks! (overridden)
+myDog:fetch()      -- Rex fetches the ball!
+myDog:takeDamage(5) -- Inherited from Animal</code></pre>
+
+    <h2>9.4 Multiple Inheritance</h2>
+
+    <p>Lua supports multiple inheritance through careful metatable setup:</p>
+
+    <pre><code>-- Create a mixin for flying ability
+local Flyable = {}
+
+function Flyable:fly()
+    print(self.name .. " is flying!")
+end
+
+function Flyable:land()
+    print(self.name .. " lands gently.")
+end
+
+-- Bird inherits from Animal and Flyable
+local Bird = setmetatable({}, Animal)
+Bird.__index = function(table, key)
+    return Bird[key] or Flyable[key] or Animal[key]
+end
+
+function Bird.new(name, wingSpan)
+    local self = setmetatable(Animal.new(name), Bird)
+    self.wingSpan = wingSpan
+    return self
+end
+
+function Bird:speak()
+    print(self.name .. " chirps!")
+end
+
+-- Usage
+local eagle = Bird.new("Eddie", 2.5)
+eagle:speak()   -- Eddie chirps!
+eagle:fly()     -- Eddie is flying! (from Flyable)</code></pre>
+
+    <h2>9.5 Private Members</h2>
+
+    <p>Implement privacy using closures:</p>
+
+    <pre><code>local function createBankAccount(owner, initialBalance)
+    -- Private variables (closure)
+    local balance = initialBalance or 0
+    local transactionHistory = {}
+    
+    -- Public interface
+    local account = {}
+    account.owner = owner
+    
+    function account:deposit(amount)
+        if amount > 0 then
+            balance = balance + amount
+            table.insert(transactionHistory, {"deposit", amount})
+            return true
+        end
+        return false
+    end
+    
+    function account:withdraw(amount)
+        if amount > 0 and amount <= balance then
+            balance = balance - amount
+            table.insert(transactionHistory, {"withdraw", amount})
+            return true
+        end
+        return false
+    end
+    
+    function account:getBalance()
+        return balance
+    end
+    
+    function account:getHistory()
+        -- Return a copy to prevent modification
+        local copy = {}
+        for i, v in ipairs(transactionHistory) do
+            copy[i] = {v[1], v[2]}
+        end
+        return copy
+    end
+    
+    return account
+end
+
+-- Usage
+local account = createBankAccount("Alex", 100)
+account:deposit(50)
+account:withdraw(30)
+print(account:getBalance())  -- 120
+-- print(account.balance)    -- nil (private)</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Lua uses prototype-based OOP with tables and metatables</li>
+            <li>Use __index for inheritance</li>
+            <li>The colon (:) syntax provides automatic self parameter</li>
+            <li>Override parent methods by defining them in the child</li>
+            <li>Use closures to create truly private members</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 10 -->
+    <h1 id="ch10">Chapter 10: Metatables and Metamethods</h1>
+
+    <div class="chapter-intro">
+        <p>Metatables are one of Lua's most powerful features. They allow you to change the behavior of tables, enabling operator overloading and advanced patterns.</p>
+    </div>
+
+    <h2>10.1 What Are Metatables?</h2>
+
+    <p>A metatable is a regular table that defines special behaviors for another table. You attach it using setmetatable:</p>
+
+    <pre><code>local myTable = {}
+local myMetatable = {}
+
+setmetatable(myTable, myMetatable)
+
+-- Or create both at once
+local t = setmetatable({}, {
+    __index = function(table, key)
+        return "Key " .. key .. " not found"
+    end
+})
+
+print(t.someKey)  -- "Key someKey not found"</code></pre>
+
+    <h2>10.2 The __index Metamethod</h2>
+
+    <p>__index is called when you access a missing key:</p>
+
+    <pre><code>-- Default values for missing keys
+local defaults = {
+    health = 100,
+    mana = 50,
+    speed = 10
+}
+
+local player = setmetatable({name = "Alex"}, {
+    __index = defaults
+})
+
+print(player.name)    -- Alex (from player)
+print(player.health)  -- 100 (from defaults)
+print(player.mana)    -- 50 (from defaults)</code></pre>
+
+    <h2>10.3 The __newindex Metamethod</h2>
+
+    <p>__newindex is called when you assign to a missing key:</p>
+
+    <pre><code>-- Read-only table
+local function createReadOnlyTable(original)
+    return setmetatable({}, {
+        __index = original,
+        __newindex = function()
+            error("Attempt to modify read-only table")
+        end
+    })
+end
+
+local constants = createReadOnlyTable({
+    PI = 3.14159,
+    MAX_PLAYERS = 20
+})
+
+print(constants.PI)  -- 3.14159
+-- constants.PI = 3  -- Error!</code></pre>
+
+    <h2>10.4 Arithmetic Metamethods</h2>
+
+    <p>Overload arithmetic operators for custom behavior:</p>
+
+    <pre><code>-- Vector2 class with operator overloading
+local Vector2 = {}
+Vector2.__index = Vector2
+
+function Vector2.new(x, y)
+    return setmetatable({x = x or 0, y = y or 0}, Vector2)
+end
+
+-- Addition
+function Vector2.__add(a, b)
+    return Vector2.new(a.x + b.x, a.y + b.y)
+end
+
+-- Subtraction
+function Vector2.__sub(a, b)
+    return Vector2.new(a.x - b.x, a.y - b.y)
+end
+
+-- Multiplication (scalar or vector)
+function Vector2.__mul(a, b)
+    if type(a) == "number" then
+        return Vector2.new(b.x * a, b.y * a)
+    elseif type(b) == "number" then
+        return Vector2.new(a.x * b, a.y * b)
+    else
+        return Vector2.new(a.x * b.x, a.y * b.y)
+    end
+end
+
+-- String representation
+function Vector2.__tostring(v)
+    return "Vector2(" .. v.x .. ", " .. v.y .. ")"
+end
+
+-- Usage
+local v1 = Vector2.new(3, 4)
+local v2 = Vector2.new(1, 2)
+
+print(v1 + v2)      -- Vector2(4, 6)
+print(v1 - v2)      -- Vector2(2, 2)
+print(v1 * 2)       -- Vector2(6, 8)
+print(v1 * v2)      -- Vector2(3, 8)</code></pre>
+
+    <h2>10.5 Comparison Metamethods</h2>
+
+    <p>Define how objects compare to each other:</p>
+
+    <pre><code>-- Equality and ordering
+function Vector2.__eq(a, b)
+    return a.x == b.x and a.y == b.y
+end
+
+function Vector2.__lt(a, b)
+    return a.x < b.x or (a.x == b.x and a.y < b.y)
+end
+
+function Vector2.__le(a, b)
+    return a < b or a == b
+end
+
+-- Usage
+local v1 = Vector2.new(3, 4)
+local v2 = Vector2.new(3, 4)
+local v3 = Vector2.new(5, 6)
+
+print(v1 == v2)  -- true
+print(v1 == v3)  -- false
+print(v1 < v3)   -- true</code></pre>
+
+    <h2>10.6 The __call Metamethod</h2>
+
+    <p>Make a table callable like a function:</p>
+
+    <pre><code>-- Callable object
+local Counter = {}
+Counter.__index = Counter
+
+function Counter.new()
+    return setmetatable({count = 0}, Counter)
+end
+
+function Counter:__call(increment)
+    increment = increment or 1
+    self.count = self.count + increment
+    return self.count
+end
+
+-- Usage
+local counter = Counter.new()
+print(counter())     -- 1
+print(counter())     -- 2
+print(counter(5))    -- 7
+print(counter(10))   -- 17</code></pre>
+
+    <h2>10.7 Complete Metamethod Reference</h2>
+
+    <table>
+        <caption data-label="Table 10.1">Lua Metamethods</caption>
+        <thead>
+            <tr>
+                <th>Metamethod</th>
+                <th>Trigger</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>__index</td><td>table[key]</td><td>Access missing key</td></tr>
+            <tr><td>__newindex</td><td>table[key] = value</td><td>Assign to missing key</td></tr>
+            <tr><td>__call</td><td>table(...)</td><td>Call table as function</td></tr>
+            <tr><td>__tostring</td><td>tostring(table)</td><td>String representation</td></tr>
+            <tr><td>__len</td><td>#table</td><td>Length operator</td></tr>
+            <tr><td>__add</td><td>a + b</td><td>Addition</td></tr>
+            <tr><td>__sub</td><td>a - b</td><td>Subtraction</td></tr>
+            <tr><td>__mul</td><td>a * b</td><td>Multiplication</td></tr>
+            <tr><td>__div</td><td>a / b</td><td>Division</td></tr>
+            <tr><td>__mod</td><td>a % b</td><td>Modulo</td></tr>
+            <tr><td>__pow</td><td>a ^ b</td><td>Exponentiation</td></tr>
+            <tr><td>__unm</td><td>-a</td><td>Unary negation</td></tr>
+            <tr><td>__eq</td><td>a == b</td><td>Equality</td></tr>
+            <tr><td>__lt</td><td>a < b</td><td>Less than</td></tr>
+            <tr><td>__le</td><td>a <= b</td><td>Less than or equal</td></tr>
+            <tr><td>__concat</td><td>a .. b</td><td>Concatenation</td></tr>
+            <tr><td>__gc</td><td>Garbage collection</td><td>Finalizer (userdata)</td></tr>
+            <tr><td>__mode</td><td>Table weakness</td><td>Weak table mode</td></tr>
+        </tbody>
+    </table>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Metatables define special behaviors for tables</li>
+            <li>__index provides default values and inheritance</li>
+            <li>__newindex can prevent modifications</li>
+            <li>Arithmetic metamethods enable operator overloading</li>
+            <li>__call makes tables callable like functions</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 11 -->
+    <h1 id="ch11">Chapter 11: Building Reusable Modules</h1>
+
+    <div class="chapter-intro">
+        <p>Modules are the foundation of organized Roblox code. This chapter teaches you to create, structure, and use modules effectively.</p>
+    </div>
+
+    <h2>11.1 What Are Modules?</h2>
+
+    <p>Modules are scripts that return a table of functions and data, designed to be reused across your game:</p>
+
+    <pre><code>-- In a ModuleScript named "MathUtils"
+local MathUtils = {}
+
+function MathUtils.clamp(value, min, max)
+    return math.max(min, math.min(max, value))
+end
+
+function MathUtils.lerp(a, b, t)
+    return a + (b - a) * t
+end
+
+function MathUtils.round(num, decimals)
+    local mult = 10 ^ (decimals or 0)
+    return math.floor(num * mult + 0.5) / mult
+end
+
+return MathUtils</code></pre>
+
+    <h2>11.2 Requiring Modules</h2>
+
+    <p>Use require() to load modules:</p>
+
+    <pre><code>-- In a Script or LocalScript
+local MathUtils = require(game.ReplicatedStorage.MathUtils)
+
+local health = MathUtils.clamp(150, 0, 100)  -- 100
+local progress = MathUtils.lerp(0, 100, 0.5)  -- 50
+local rounded = MathUtils.round(3.14159, 2)   -- 3.14</code></pre>
+
+    <h2>11.3 Module Structure Best Practices</h2>
+
+    <pre><code>-- Well-structured module example
+local PlayerData = {}
+PlayerData.__index = PlayerData
+
+-- Private variables (module-level)
+local DEFAULT_DATA = {
+    level = 1,
+    experience = 0,
+    coins = 0,
+    inventory = {}
+}
+
+local savedData = {}
+
+-- Private functions
+local function validateData(data)
+    return typeof(data) == "table"
+end
+
+-- Public constructor
+function PlayerData.new(player)
+    local self = setmetatable({}, PlayerData)
+    self.player = player
+    self.data = table.clone(DEFAULT_DATA)
+    return self
+end
+
+-- Public methods
+function PlayerData:addExperience(amount)
+    self.data.experience += amount
+    -- Level up logic here
+end
+
+function PlayerData:save()
+    savedData[self.player.UserId] = self.data
+end
+
+function PlayerData.load(player)
+    return savedData[player.UserId]
+end
+
+return PlayerData</code></pre>
+
+    <h2>11.4 Module Organization Patterns</h2>
+
+    <p>Common ways to organize modules in Roblox:</p>
+
+    <pre><code>-- Service pattern (singleton)
+local GameService = {}
+
+local isRunning = false
+local playersInGame = {}
+
+function GameService:start()
+    isRunning = true
+    -- Initialize game
+end
+
+function GameService:stop()
+    isRunning = false
+end
+
+function GameService:isActive()
+    return isRunning
+end
+
+return GameService
+
+-- Utility pattern (stateless functions)
+local StringUtils = {}
+
+function StringUtils.split(str, delimiter)
+    local result = {}
+    for match in str:gmatch("[^" .. delimiter .. "]+") do
+        table.insert(result, match)
+    end
+    return result
+end
+
+function StringUtils.trim(str)
+    return str:match("^%s*(.-)%s*$")
+end
+
+return StringUtils
+
+-- Factory pattern
+local Enemy = {}
+Enemy.__index = Enemy
+
+function Enemy.create(type, position)
+    local self = setmetatable({}, Enemy)
+    self.type = type
+    self.position = position
+    self.health = Enemy.TYPES[type].health
+    return self
+end
+
+Enemy.TYPES = {
+    goblin = {health = 50, damage = 10},
+    orc = {health = 100, damage = 20},
+    dragon = {health = 500, damage = 50}
+}
+
+return Enemy</code></pre>
+
+    <h2>11.5 Module Caching</h2>
+
+    <p>Roblox caches required modules, returning the same table on subsequent requires:</p>
+
+    <pre><code>-- First require: module executes and returns
+local Utils1 = require(game.ReplicatedStorage.Utils)
+
+-- Second require: returns cached result
+local Utils2 = require(game.ReplicatedStorage.Utils)
+
+print(Utils1 == Utils2)  -- true (same table)
+
+-- This enables shared state
+Utils1.counter = 5
+print(Utils2.counter)  -- 5</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Modules return tables of reusable code</li>
+            <li>Use require() to load modules</li>
+            <li>Modules are cached after first require</li>
+            <li>Organize modules by purpose: services, utilities, factories</li>
+            <li>Keep private variables at module scope</li>
+        </ul>
+    </div>
+
+
+
+    <!-- PART IV: ROBLOX API MASTERY -->
+    <div class="part-divider" id="part4">
+        <div class="part-number">Part IV</div>
+        <h1 class="part-title">Roblox API Mastery</h1>
+        <p class="part-desc">Deep dive into the Roblox API, understanding services, the instance hierarchy, and how to manipulate the game world programmatically.</p>
+    </div>
+
+    <!-- Chapter 12 -->
+    <h1 id="ch12">Chapter 12: Understanding the Roblox API</h1>
+
+    <div class="chapter-intro">
+        <p>The Roblox API is vast and powerful. This chapter provides the foundation for understanding how to interact with every aspect of the Roblox engine through code.</p>
+    </div>
+
+    <h2>12.1 What is the Roblox API?</h2>
+
+    <p>The Roblox API (Application Programming Interface) is a collection of classes, properties, methods, and events that allow scripts to interact with the game engine. It provides programmatic access to:</p>
+
+    <ul>
+        <li>3D world objects (Parts, Models, Terrain)</li>
+        <li>Player management and data</li>
+        <li>Physics simulation</li>
+        <li>User interfaces</li>
+        <li>Networking and data storage</li>
+        <li>Sound, lighting, and effects</li>
+    </ul>
+
+    <h2>12.2 API Structure</h2>
+
+    <p>The Roblox API is organized hierarchically:</p>
+
+    <pre><code>-- Accessing the game world
+local workspace = game:GetService("Workspace")
+
+-- Finding objects
+local part = workspace:FindFirstChild("MyPart")
+local player = game.Players.LocalPlayer
+
+-- Creating objects
+local newPart = Instance.new("Part")
+newPart.Parent = workspace</code></pre>
+
+    <h2>12.3 Essential Classes</h2>
+
+    <table>
+        <caption data-label="Table 12.1">Core Roblox Classes</caption>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Purpose</th>
+                <th>Common Use</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Instance</td><td>Base class for all objects</td><td>Parent-child relationships</td></tr>
+            <tr><td>Part</td><td>3D physical object</td><td>Building blocks, platforms</td></tr>
+            <tr><td>Model</td><td>Container for grouped objects</td><td>Organizing related parts</td></tr>
+            <tr><td>Script</td><td>Server-side code container</td><td>Game logic</td></tr>
+            <tr><td>LocalScript</td><td>Client-side code container</td><td>UI, camera, input</td></tr>
+            <tr><td>ModuleScript</td><td>Reusable code module</td><td>Shared functions</td></tr>
+            <tr><td>Player</td><td>Represents a player</td><td>Player data, character</td></tr>
+            <tr><td>Humanoid</td><td>Character controller</td><td>Health, walking, jumping</td></tr>
+        </tbody>
+    </table>
+
+    <h2>12.4 Using the Creator Documentation</h2>
+
+    <p>The official Roblox Creator Documentation is your primary resource:</p>
+
+    <ul>
+        <li><strong>API Reference:</strong> Complete listing of all classes, properties, and methods</li>
+        <li><strong>Tutorials:</strong> Step-by-step guides for common tasks</li>
+        <li><strong>Code Samples:</strong> Working examples you can adapt</li>
+        <li><strong>Search:</strong> Find specific classes or functionality quickly</li>
+    </ul>
+
+    <div class="tip-box">
+        <div class="tip-box-title">Pro Tip</div>
+        <p>When exploring the API, start with the Instance class. Most classes inherit from it, so understanding Instance properties and methods gives you a foundation for the entire API.</p>
+    </div>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>The Roblox API provides access to all engine features</li>
+            <li>Classes are organized hierarchically with Instance as the base</li>
+            <li>Use the Creator Documentation as your primary reference</li>
+            <li>Most interactions involve getting services and manipulating instances</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 13 -->
+    <h1 id="ch13">Chapter 13: Working with Services</h1>
+
+    <div class="chapter-intro">
+        <p>Services are singleton objects that provide core functionality. Understanding services is essential for accessing players, data storage, networking, and more.</p>
+    </div>
+
+    <h2>13.1 Getting Services</h2>
+
+    <p>Always use GetService to access services:</p>
+
+    <pre><code>-- Correct way to get services
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local DataStoreService = game:GetService("DataStoreService")</code></pre>
+
+    <h2>13.2 Players Service</h2>
+
+    <p>Manages player connections and data:</p>
+
+    <pre><code>local Players = game:GetService("Players")
+
+-- Player joined event
+Players.PlayerAdded:Connect(function(player)
+    print(player.Name .. " joined the game!")
+    print("UserId: " .. player.UserId)
+    print("Account age: " .. player.AccountAge .. " days")
+end)
+
+-- Player leaving event
+Players.PlayerRemoving:Connect(function(player)
+    print(player.Name .. " left the game")
+end)
+
+-- Get all current players
+for _, player in ipairs(Players:GetPlayers()) do
+    print("Player: " .. player.Name)
+end
+
+-- Find a specific player
+local targetPlayer = Players:FindFirstChild("PlayerName")
+local playerById = Players:GetPlayerByUserId(12345678)</code></pre>
+
+    <h2>13.3 ReplicatedStorage</h2>
+
+    <p>Stores objects accessible by both server and client:</p>
+
+    <pre><code>local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Store templates, modules, and remote events here
+local weaponTemplate = ReplicatedStorage:WaitForChild("WeaponTemplate")
+local gameConfig = require(ReplicatedStorage:WaitForChild("GameConfig"))
+
+-- Clone templates
+local newWeapon = weaponTemplate:Clone()
+newWeapon.Parent = workspace</code></pre>
+
+    <h2>13.4 RunService</h2>
+
+    <p>Controls game loop and frame updates:</p>
+
+    <pre><code>local RunService = game:GetService("RunService")
+
+-- Runs every frame (client-side)
+RunService.RenderStepped:Connect(function(deltaTime)
+    -- Update UI, camera, animations
+end)
+
+-- Runs every physics step (server and client)
+RunService.Heartbeat:Connect(function(deltaTime)
+    -- Update physics-related logic
+end)
+
+-- Runs before physics (server-side)
+RunService.Stepped:Connect(function(time, deltaTime)
+    -- Update game state
+end)
+
+-- Check if running on server or client
+if RunService:IsServer() then
+    print("Running on server")
+elseif RunService:IsClient() then
+    print("Running on client")
+end</code></pre>
+
+    <h2>13.5 TweenService</h2>
+
+    <p>Creates smooth animations:</p>
+
+    <pre><code>local TweenService = game:GetService("TweenService")
+local part = workspace.Part
+
+-- Define tween info
+local tweenInfo = TweenInfo.new(
+    2,                      -- Duration (seconds)
+    Enum.EasingStyle.Quad,  -- Easing style
+    Enum.EasingDirection.Out -- Easing direction
+)
+
+-- Define target properties
+local goal = {
+    Position = Vector3.new(0, 10, 0),
+    Color = Color3.fromRGB(255, 0, 0),
+    Size = Vector3.new(4, 4, 4)
+}
+
+-- Create and play tween
+local tween = TweenService:Create(part, tweenInfo, goal)
+tween:Play()
+
+-- Listen for completion
+tween.Completed:Connect(function()
+    print("Tween finished!")
+end)</code></pre>
+
+    <h2>13.6 Essential Services Reference</h2>
+
+    <table>
+        <caption data-label="Table 13.1">Essential Roblox Services</caption>
+        <thead>
+            <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Players</td><td>Player management and events</td></tr>
+            <tr><td>Workspace</td><td>3D world container</td></tr>
+            <tr><td>ReplicatedStorage</td><td>Shared server/client storage</td></tr>
+            <tr><td>ServerStorage</td><td>Server-only storage</td></tr>
+            <tr><td>ReplicatedFirst</td><td>Loads before anything else</td></tr>
+            <tr><td>RunService</td><td>Game loop and frame events</td></tr>
+            <tr><td>TweenService</td><td>Animation and interpolation</td></tr>
+            <tr><td>DataStoreService</td><td>Persistent data storage</td></tr>
+            <tr><td>TeleportService</td><td>Teleport players between places</td></tr>
+            <tr><td>MessagingService</td><td>Cross-server communication</td></tr>
+            <tr><td>MarketplaceService</td><td>In-game purchases</td></tr>
+            <tr><td>SoundService</td><td>Audio management</td></tr>
+            <tr><td>Lighting</td><td>World lighting settings</td></tr>
+            <tr><td>Teams</td><td>Team management</td></tr>
+            <tr><td>Chat</td><td>Chat system control</td></tr>
+        </tbody>
+    </table>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Always use GetService() to access services</li>
+            <li>Players service manages player connections</li>
+            <li>ReplicatedStorage is for shared objects</li>
+            <li>RunService provides frame update events</li>
+            <li>TweenService creates smooth animations</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 14 -->
+    <h1 id="ch14">Chapter 14: The Instance Hierarchy</h1>
+
+    <div class="chapter-intro">
+        <p>Everything in Roblox is an Instance. Understanding the parent-child hierarchy is fundamental to manipulating the game world.</p>
+    </div>
+
+    <h2>14.1 Instance Basics</h2>
+
+    <p>All objects in Roblox inherit from the Instance class:</p>
+
+    <pre><code>-- Creating instances
+local part = Instance.new("Part")
+local model = Instance.new("Model")
+local script = Instance.new("Script")
+
+-- Setting properties
+part.Name = "MyPlatform"
+part.Size = Vector3.new(10, 1, 10)
+part.Position = Vector3.new(0, 10, 0)
+part.Anchored = true
+part.Color = Color3.fromRGB(100, 100, 100)
+
+-- Parenting (must be done last for performance)
+part.Parent = workspace</code></pre>
+
+    <h2>14.2 Parent-Child Relationships</h2>
+
+    <p>The hierarchy determines visibility, physics, and organization:</p>
+
+    <pre><code>-- Creating a hierarchy
+local model = Instance.new("Model")
+model.Name = "House"
+
+local base = Instance.new("Part")
+base.Name = "Base"
+base.Parent = model
+
+local roof = Instance.new("Part")
+roof.Name = "Roof"
+roof.Parent = model
+
+-- Parent the model to workspace
+model.Parent = workspace
+
+-- Children inherit some properties
+-- Destroying parent destroys all children
+model:Destroy()  -- Base and Roof are also destroyed</code></pre>
+
+    <h2>14.3 Finding Children</h2>
+
+    <p>Navigate the hierarchy with find methods:</p>
+
+    <pre><code>local model = workspace:FindFirstChild("House")
+
+-- Direct child access
+local base = model:FindFirstChild("Base")
+local base = model.Base  -- Shorthand (errors if not found)
+local base = model:WaitForChild("Base")  -- Waits for existence
+
+-- Find by type
+local allParts = model:GetDescendants()
+for _, descendant in ipairs(allParts) do
+    if descendant:IsA("BasePart") then
+        print("Found part: " .. descendant.Name)
+    end
+end
+
+-- Find first of type
+local firstPart = model:FindFirstChildWhichIsA("BasePart")
+
+-- Check if child exists
+if model:FindFirstChild("Door") then
+    print("House has a door")
+end</code></pre>
+
+    <h2>14.4 Instance Properties</h2>
+
+    <p>Common properties all instances share:</p>
+
+    <pre><code>local part = workspace.Part
+
+-- Identity
+print(part.Name)        -- "Part"
+print(part.ClassName)   -- "Part"
+print(part:IsA("BasePart"))  -- true
+print(part:IsA("Part"))      -- true
+
+-- Hierarchy
+print(part.Parent)      -- Workspace
+print(part:GetChildren())    -- Table of children
+print(part:GetDescendants()) -- Table of all descendants
+
+-- Unique identifier
+print(part:GetFullName())  -- "Workspace.Part"
+
+-- Archivable (saves with place)
+part.Archivable = true</code></pre>
+
+    <h2>14.5 Instance Methods</h2>
+
+    <p>Essential methods for instance manipulation:</p>
+
+    <pre><code>local part = workspace.Part
+
+-- Cloning
+local clone = part:Clone()
+clone.Position = part.Position + Vector3.new(10, 0, 0)
+clone.Parent = workspace
+
+-- Destroying
+part:Destroy()  -- Removes and cleans up
+-- part is now invalid; accessing it errors
+
+-- Clearing children
+model:ClearAllChildren()  -- Destroys all children
+
+-- Getting attributes
+local attributes = part:GetAttributes()
+for name, value in pairs(attributes) do
+    print(name .. " = " .. tostring(value))
+end</code></pre>
+
+    <h2>14.6 Attributes and Tags</h2>
+
+    <p>Store custom data on instances:</p>
+
+    <pre><code>local part = workspace.Part
+
+-- Attributes (typed values)
+part:SetAttribute("Health", 100)
+part:SetAttribute("IsBreakable", true)
+part:SetAttribute("Owner", "Player123")
+
+-- Reading attributes
+local health = part:GetAttribute("Health")
+local owner = part:GetAttribute("Owner")
+
+-- Attribute changed event
+part:GetAttributeChangedSignal("Health"):Connect(function()
+    print("Health changed to: " .. part:GetAttribute("Health"))
+end)
+
+-- CollectionService for tags
+local CollectionService = game:GetService("CollectionService")
+
+-- Add tag
+CollectionService:AddTag(part, "Damageable")
+CollectionService:AddTag(part, "Interactable")
+
+-- Get tagged instances
+local damageables = CollectionService:GetTagged("Damageable")
+
+-- Tag added/removed events
+CollectionService:GetInstanceAddedSignal("Damageable"):Connect(function(instance)
+    print(instance.Name .. " is now damageable")
+end)</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>All Roblox objects are Instances with parent-child relationships</li>
+            <li>Use FindFirstChild, WaitForChild, and GetDescendants to navigate</li>
+            <li>Clone() creates copies; Destroy() removes instances</li>
+            <li>Attributes store typed custom data on instances</li>
+            <li>CollectionService manages tags for grouping instances</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 15 -->
+    <h1 id="ch15">Chapter 15: Properties, Methods, and Events</h1>
+
+    <div class="chapter-intro">
+        <p>Every Roblox class exposes properties, methods, and events. This chapter shows you how to use them to control and respond to the game world.</p>
+    </div>
+
+    <h2>15.1 Working with Properties</h2>
+
+    <p>Properties define an instance's state and appearance:</p>
+
+    <pre><code>local part = Instance.new("Part")
+
+-- Physical properties
+part.Size = Vector3.new(4, 1, 2)
+part.Position = Vector3.new(0, 5, 0)
+part.Orientation = Vector3.new(0, 45, 0)
+part.Anchored = true
+part.CanCollide = true
+part.Massless = false
+
+-- Material properties
+part.Material = Enum.Material.Concrete
+part.Color = Color3.fromRGB(163, 162, 165)
+part.Transparency = 0
+part.Reflectance = 0
+
+-- Behavioral properties
+part.Shape = Enum.PartType.Block
+-- part.Shape = Enum.PartType.Ball
+-- part.Shape = Enum.PartType.Cylinder</code></pre>
+
+    <h2>15.2 Common Part Methods</h2>
+
+    <pre><code>local part = workspace.Part
+
+-- Apply force
+part:ApplyImpulse(Vector3.new(0, 100, 0))
+
+-- Get bounds
+local size = part:GetExtentsSize()
+local cframe = part:GetPivot()
+
+-- Intersection check
+local touching = part:GetTouchingParts()
+
+-- Raycast from part
+local rayOrigin = part.Position
+local rayDirection = part.CFrame.LookVector * 100
+local raycastResult = workspace:Raycast(rayOrigin, rayDirection)
+
+if raycastResult then
+    print("Hit: " .. raycastResult.Instance.Name)
+end</code></pre>
+
+    <h2>15.3 Working with Events</h2>
+
+    <p>Events notify you when something happens:</p>
+
+    <pre><code>local part = workspace.Part
+
+-- Touched event (when something touches the part)
+part.Touched:Connect(function(hit)
+    local character = hit.Parent
+    local player = game.Players:GetPlayerFromCharacter(character)
+    
+    if player then
+        print(player.Name .. " touched the part!")
+    end
+end)
+
+-- Touch ended event
+part.TouchEnded:Connect(function(hit)
+    print("No longer touching: " .. hit.Name)
+end)
+
+-- Property changed event
+part:GetPropertyChangedSignal("Position"):Connect(function()
+    print("Part moved to: " .. tostring(part.Position))
+end)
+
+-- Child added/removed
+workspace.ChildAdded:Connect(function(child)
+    if child:IsA("BasePart") then
+        print("New part created: " .. child.Name)
+    end
+end)</code></pre>
+
+    <h2>15.4 Humanoid Properties and Methods</h2>
+
+    <pre><code>local character = script.Parent
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Health properties
+humanoid.MaxHealth = 100
+humanoid.Health = 100
+
+-- Movement properties
+humanoid.WalkSpeed = 16
+humanoid.JumpPower = 50
+humanoid.AutoRotate = true
+
+-- State
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+
+-- Methods
+humanoid:TakeDamage(25)
+humanoid:Heal(10)
+humanoid:MoveTo(Vector3.new(10, 0, 10))
+
+-- Events
+humanoid.Died:Connect(function()
+    print("Player died!")
+end)
+
+humanoid.HealthChanged:Connect(function(newHealth)
+    print("Health: " .. newHealth)
+end)</code></pre>
+
+    <h2>15.5 Player Properties and Events</h2>
+
+    <pre><code>local Players = game:GetService("Players")
+
+Players.PlayerAdded:Connect(function(player)
+    -- Player properties
+    print("Name: " .. player.Name)
+    print("UserId: " .. player.UserId)
+    print("DisplayName: " .. player.DisplayName)
+    print("AccountAge: " .. player.AccountAge)
+    
+    -- Character events
+    player.CharacterAdded:Connect(function(character)
+        print(player.Name .. " spawned")
+        
+        local humanoid = character:WaitForChild("Humanoid")
+        -- Setup character
+    end)
+    
+    player.CharacterRemoving:Connect(function()
+        print(player.Name .. " despawned")
+    end)
+end)</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Properties define instance state and can be read/written</li>
+            <li>Methods perform actions on instances</li>
+            <li>Events notify when things happen; connect functions to respond</li>
+            <li>Use :Connect() to attach event handlers</li>
+            <li>Humanoid controls character behavior</li>
+        </ul>
+    </div>
+
+
+
+    <!-- PART V: GAME DEVELOPMENT ESSENTIALS -->
+    <div class="part-divider" id="part5">
+        <div class="part-number">Part V</div>
+        <h1 class="part-title">Game Development Essentials</h1>
+        <p class="part-desc">Apply your knowledge to build real game features: manipulating the 3D world, handling events, creating user interfaces, and working with physics.</p>
+    </div>
+
+    <!-- Chapter 16 -->
+    <h1 id="ch16">Chapter 16: Part Manipulation and 3D Space</h1>
+
+    <div class="chapter-intro">
+        <p>Understanding 3D space and how to manipulate parts is fundamental to Roblox development. This chapter covers vectors, CFrames, and part manipulation.</p>
+    </div>
+
+    <h2>16.1 Understanding Vectors</h2>
+
+    <p>Vectors represent points and directions in 3D space:</p>
+
+    <pre><code>-- Creating vectors
+local origin = Vector3.new(0, 0, 0)
+local point = Vector3.new(10, 5, 3)
+local direction = Vector3.new(1, 0, 0)  -- Unit vector
+
+-- Vector operations
+local a = Vector3.new(1, 2, 3)
+local b = Vector3.new(4, 5, 6)
+
+local sum = a + b           -- Addition
+local diff = a - b          -- Subtraction
+local scaled = a * 2        -- Scalar multiplication
+local divided = a / 2       -- Scalar division
+
+-- Vector properties
+local magnitude = a.Magnitude  -- Length (3.74...)
+local unit = a.Unit            -- Normalized direction
+
+-- Distance between points
+local distance = (a - b).Magnitude
+
+-- Dot product (angle between vectors)
+local dot = a:Dot(b)
+
+-- Cross product (perpendicular vector)
+local cross = a:Cross(b)</code></pre>
+
+    <h2>16.2 Understanding CFrame</h2>
+
+    <p>CFrame (Coordinate Frame) combines position and orientation:</p>
+
+    <pre><code>-- Creating CFrames
+local cf1 = CFrame.new(10, 5, 0)  -- Position only
+local cf2 = CFrame.new(Vector3.new(10, 5, 0))  -- From vector
+
+-- Position and look-at
+local cf3 = CFrame.lookAt(
+    Vector3.new(0, 10, 0),    -- Position
+    Vector3.new(0, 0, 0)      -- Look at this point
+)
+
+-- From position and orientation
+local cf4 = CFrame.new(0, 5, 0) * CFrame.Angles(0, math.rad(45), 0)
+
+-- CFrame properties
+local position = cf1.Position
+local lookVector = cf1.LookVector
+local rightVector = cf1.RightVector
+local upVector = cf1.UpVector</code></pre>
+
+    <h2>16.3 Manipulating Parts</h2>
+
+    <pre><code>local part = Instance.new("Part")
+part.Anchored = true
+part.Parent = workspace
+
+-- Setting position
+part.Position = Vector3.new(10, 5, 0)
+
+-- Setting with CFrame (position + rotation)
+part.CFrame = CFrame.new(10, 5, 0) * CFrame.Angles(0, math.rad(90), 0)
+
+-- Relative movement
+part.Position = part.Position + Vector3.new(0, 5, 0)  -- Move up 5
+part.CFrame = part.CFrame * CFrame.new(5, 0, 0)  -- Move right 5 (local)
+
+-- Rotation
+part.Orientation = Vector3.new(0, 45, 0)  -- Euler angles
+part.Rotation = Vector3.new(0, 45, 0)
+part.CFrame = part.CFrame * CFrame.Angles(0, math.rad(10), 0)  -- Rotate</code></pre>
+
+    <h2>16.4 Creating Parts Programmatically</h2>
+
+    <pre><code>-- Function to create a part
+local function createPart(config)
+    config = config or {}
+    
+    local part = Instance.new("Part")
+    part.Name = config.name or "Part"
+    part.Size = config.size or Vector3.new(4, 1, 2)
+    part.Position = config.position or Vector3.new(0, 0, 0)
+    part.Color = config.color or Color3.fromRGB(163, 162, 165)
+    part.Material = config.material or Enum.Material.Plastic
+    part.Anchored = config.anchored ~= false  -- Default true
+    part.CanCollide = config.canCollide ~= false  -- Default true
+    part.Parent = config.parent or workspace
+    
+    return part
+end
+
+-- Create a platform
+local platform = createPart({
+    name = "Platform",
+    size = Vector3.new(20, 1, 20),
+    position = Vector3.new(0, 10, 0),
+    color = Color3.fromRGB(100, 100, 100),
+    material = Enum.Material.Concrete
+})
+
+-- Create a staircase
+for i = 1, 10 do
+    createPart({
+        name = "Step" .. i,
+        size = Vector3.new(4, 1, 2),
+        position = Vector3.new(i * 4, i * 2, 0),
+        color = Color3.fromRGB(200, 150, 100)
+    })
+end</code></pre>
+
+    <h2>16.5 Raycasting</h2>
+
+    <p>Raycasting finds what a line intersects:</p>
+
+    <pre><code>-- Basic raycast
+local origin = Vector3.new(0, 10, 0)
+local direction = Vector3.new(0, -20, 0)  -- Down 20 studs
+
+local raycastResult = workspace:Raycast(origin, direction)
+
+if raycastResult then
+    print("Hit: " .. raycastResult.Instance.Name)
+    print("Position: " .. tostring(raycastResult.Position))
+    print("Normal: " .. tostring(raycastResult.Normal))
+    print("Distance: " .. raycastResult.Distance)
+    print("Material: " .. tostring(raycastResult.Material))
+else
+    print("Nothing hit")
+end
+
+-- Raycast with parameters (ignore certain objects)
+local raycastParams = RaycastParams.new()
+raycastParams.FilterDescendantsInstances = {character}
+raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+local result = workspace:Raycast(origin, direction, raycastParams)</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Vector3 represents points and directions in 3D space</li>
+            <li>CFrame combines position and orientation</li>
+            <li>Use CFrame for complex positioning and rotation</li>
+            <li>Raycasting detects intersections with the world</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 17 -->
+    <h1 id="ch17">Chapter 17: Events and Event Handling</h1>
+
+    <div class="chapter-intro">
+        <p>Events are the backbone of interactive experiences. This chapter covers event handling patterns and best practices for responsive games.</p>
+    </div>
+
+    <h2>17.1 Understanding Events</h2>
+
+    <p>Events signal when something happens in the game:</p>
+
+    <pre><code>-- Event connection pattern
+local event = someObject.SomeEvent
+
+local connection = event:Connect(function(arg1, arg2)
+    -- Handle the event
+    print("Event fired with:", arg1, arg2)
+end)
+
+-- Disconnect when no longer needed
+connection:Disconnect()
+
+-- Connect once (auto-disconnects after firing)
+event:Once(function()
+    print("This only fires once")
+end)
+
+-- Wait for event (yields until fired)
+local arg1, arg2 = event:Wait()
+print("Event fired while waiting")</code></pre>
+
+    <h2>17.2 Common Game Events</h2>
+
+    <pre><code>local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- Player events
+Players.PlayerAdded:Connect(function(player)
+    print(player.Name .. " joined")
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    print(player.Name .. " left")
+end)
+
+-- Character events
+local player = Players.LocalPlayer
+player.CharacterAdded:Connect(function(character)
+    print("Character spawned")
+end)
+
+-- Input events (LocalScript)
+local UserInputService = game:GetService("UserInputService")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.Space then
+        print("Space pressed")
+    end
+end)
+
+-- Render step (every frame)
+RunService.RenderStepped:Connect(function(deltaTime)
+    -- Update UI, camera
+end)</code></pre>
+
+    <h2>17.3 Custom Events with BindableEvents</h2>
+
+    <pre><code>-- Create a custom event
+local event = Instance.new("BindableEvent")
+event.Name = "ScoreChanged"
+event.Parent = script
+
+-- Fire the event
+event:Fire(100, "Player1")
+
+-- Connect to it
+event.Event:Connect(function(score, playerName)
+    print(playerName .. " scored " .. score)
+end)
+
+-- For functions that return values, use BindableFunction
+local func = Instance.new("BindableFunction")
+func.Name = "GetPlayerLevel"
+func.Parent = script
+
+func.OnInvoke = function(playerName)
+    return 25  -- Return value to caller
+end
+
+-- Invoke the function
+local level = func:Invoke("Player1")</code></pre>
+
+    <h2>17.4 Event Best Practices</h2>
+
+    <pre><code>-- Always check if objects still exist
+part.Touched:Connect(function(hit)
+    if not part.Parent then return end
+    if not hit.Parent then return end
+    -- Process touch
+end)
+
+-- Debounce to prevent rapid firing
+local debounce = false
+
+part.Touched:Connect(function(hit)
+    if debounce then return end
+    debounce = true
+    
+    -- Process touch
+    print("Touched!")
+    task.wait(1)  -- 1 second cooldown
+    
+    debounce = false
+end)
+
+-- Store connections for cleanup
+local connections = {}
+
+local conn = part.Touched:Connect(function() end)
+table.insert(connections, conn)
+
+-- Cleanup function
+local function cleanup()
+    for _, connection in ipairs(connections) do
+        connection:Disconnect()
+    end
+    connections = {}
+end</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Events signal when things happen in the game</li>
+            <li>Use :Connect() to attach handlers; :Disconnect() to remove</li>
+            <li>BindableEvents create custom events</li>
+            <li>Always disconnect unused connections to prevent memory leaks</li>
+            <li>Use debouncing to prevent event spam</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 18 -->
+    <h1 id="ch18">Chapter 18: GUI Development</h1>
+
+    <div class="chapter-intro">
+        <p>User interfaces are essential for game interaction. This chapter covers ScreenGuis, buttons, text, and creating polished UI systems.</p>
+    </div>
+
+    <h2>18.1 GUI Structure</h2>
+
+    <p>GUIs in Roblox have a specific hierarchy:</p>
+
+    <pre><code>-- GUI structure
+StarterGui
+└── ScreenGui (container)
+    └── Frame (container)
+        └── TextButton (interactive element)
+        └── TextLabel (display element)
+        └── ImageLabel (image display)
+        └── TextBox (input field)
+
+-- Creating a GUI programmatically
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MyGameUI"
+screenGui.Parent = playerGui
+
+-- Create a frame
+local frame = Instance.new("Frame")
+frame.Name = "MainMenu"
+frame.Size = UDim2.new(0, 400, 0, 300)
+frame.Position = UDim2.new(0.5, -200, 0.5, -150)  -- Centered
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BorderSizePixel = 0
+frame.Parent = screenGui</code></pre>
+
+    <h2>18.2 Understanding UDim2</h2>
+
+    <p>UDim2 defines size and position with scale and offset:</p>
+
+    <pre><code>-- UDim2 format: UDim2.new(scaleX, offsetX, scaleY, offsetY)
+
+-- Scale (percentage of parent)
+UDim2.new(0.5, 0, 0.5, 0)     -- 50% width, 50% height
+UDim2.new(1, 0, 1, 0)         -- Full parent size
+
+-- Offset (pixels)
+UDim2.new(0, 100, 0, 50)      -- 100px width, 50px height
+
+-- Combined
+UDim2.new(0.5, -50, 0, 100)   -- 50% minus 50px width, 100px height
+
+-- Common patterns
+UDim2.new(0.5, 0, 0.5, 0)     -- Half size, anchored top-left
+UDim2.new(0.5, 0, 0.5, 0) + 
+    UDim2.new(0.5, 0, 0.5, 0)  -- Centered (using AnchorPoint)</code></pre>
+
+    <h2>18.3 Common GUI Elements</h2>
+
+    <pre><code>-- TextLabel
+local label = Instance.new("TextLabel")
+label.Text = "Welcome!"
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.TextSize = 24
+label.Font = Enum.Font.GothamBold
+label.Size = UDim2.new(1, 0, 0, 50)
+label.BackgroundTransparency = 1
+label.Parent = frame
+
+-- TextButton
+local button = Instance.new("TextButton")
+button.Text = "Click Me!"
+button.Size = UDim2.new(0, 200, 0, 50)
+button.Position = UDim2.new(0.5, -100, 0.5, -25)
+button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.TextSize = 18
+button.Font = Enum.Font.GothamSemibold
+button.Parent = frame
+
+-- Button events
+button.MouseButton1Click:Connect(function()
+    print("Button clicked!")
+end)
+
+button.MouseEnter:Connect(function()
+    button.BackgroundColor3 = Color3.fromRGB(0, 140, 220)
+end)
+
+button.MouseLeave:Connect(function()
+    button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+end)
+
+-- TextBox (input)
+local textBox = Instance.new("TextBox")
+textBox.PlaceholderText = "Enter your name..."
+textBox.Size = UDim2.new(0, 200, 0, 40)
+textBox.ClearTextOnFocus = false
+textBox.Parent = frame
+
+textBox.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        print("Entered: " .. textBox.Text)
+    end
+end)</code></pre>
+
+    <h2>18.4 UI Layout with UIListLayout</h2>
+
+    <pre><code>-- Automatic layout
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 400)
+frame.Parent = screenGui
+
+local listLayout = Instance.new("UIListLayout")
+listLayout.Padding = UDim.new(0, 10)
+listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+listLayout.VerticalAlignment = Enum.VerticalAlignment.Top
+listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+listLayout.Parent = frame
+
+-- Add buttons (automatically arranged)
+for i = 1, 5 do
+    local button = Instance.new("TextButton")
+    button.Text = "Option " .. i
+    button.Size = UDim2.new(0.9, 0, 0, 50)
+    button.LayoutOrder = i
+    button.Parent = frame
+end
+
+-- Add padding around content
+local padding = Instance.new("UIPadding")
+padding.PaddingTop = UDim.new(0, 20)
+padding.PaddingBottom = UDim.new(0, 20)
+padding.Parent = frame
+
+-- Corner radius
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = frame</code></pre>
+
+    <h2>18.5 Tweening GUI Elements</h2>
+
+    <pre><code>local TweenService = game:GetService("TweenService")
+
+-- Fade in animation
+local function fadeIn(element, duration)
+    element.BackgroundTransparency = 1
+    
+    local tween = TweenService:Create(
+        element,
+        TweenInfo.new(duration or 0.5),
+        {BackgroundTransparency = 0}
+    )
+    tween:Play()
+end
+
+-- Slide in from left
+local function slideInFromLeft(element, duration)
+    local targetPosition = element.Position
+    element.Position = targetPosition - UDim2.new(0, 200, 0, 0)
+    
+    local tween = TweenService:Create(
+        element,
+        TweenInfo.new(duration or 0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        {Position = targetPosition}
+    )
+    tween:Play()
+end
+
+-- Scale bounce effect
+local function bounce(element)
+    local originalSize = element.Size
+    
+    local shrink = TweenService:Create(element, TweenInfo.new(0.1), {
+        Size = originalSize * 0.9
+    })
+    local grow = TweenService:Create(element, TweenInfo.new(0.2, Enum.EasingStyle.Back), {
+        Size = originalSize
+    })
+    
+    shrink:Play()
+    shrink.Completed:Connect(function()
+        grow:Play()
+    end)
+end</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>GUIs use ScreenGui as the root container</li>
+            <li>UDim2 combines scale (percentage) and offset (pixels)</li>
+            <li>Use UIListLayout for automatic element arrangement</li>
+            <li>TweenService animates UI elements smoothly</li>
+            <li>Connect to Mouse events for interactivity</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 19 -->
+    <h1 id="ch19">Chapter 19: Physics and Constraints</h1>
+
+    <div class="chapter-intro">
+        <p>Roblox physics simulation creates realistic movement and interactions. This chapter covers constraints, forces, and physics-based gameplay.</p>
+    </div>
+
+    <h2>19.1 Understanding Roblox Physics</h2>
+
+    <p>Roblox uses a physics engine for realistic simulation:</p>
+
+    <pre><code>-- Physics properties on parts
+local part = Instance.new("Part")
+part.Anchored = false      -- Affected by physics
+part.CanCollide = true     -- Collides with other parts
+part.Massless = false      -- Has mass
+part.CustomPhysicalProperties = PhysicalProperties.new(
+    0.7,  -- Density
+    0.3,  -- Friction
+    0.5,  -- Elasticity
+    1,    -- Friction weight
+    1     -- Elasticity weight
+)
+
+-- Material affects physics
+part.Material = Enum.Material.Ice      -- Slippery
+part.Material = Enum.Material.Rubber   -- Bouncy
+part.Material = Enum.Material.Concrete -- Normal</code></pre>
+
+    <h2>19.2 Common Constraints</h2>
+
+    <pre><code>-- Weld (parts move together)
+local weld = Instance.new("Weld")
+weld.Part0 = part1
+weld.Part1 = part2
+weld.C0 = CFrame.new(0, 5, 0)  -- Offset from Part0
+weld.Parent = part1
+
+-- WeldConstraint (simpler, auto-calculates offset)
+local weldConstraint = Instance.new("WeldConstraint")
+weldConstraint.Part0 = part1
+weldConstraint.Part1 = part2
+weldConstraint.Parent = part1
+
+-- HingeConstraint (rotating joint)
+local hinge = Instance.new("HingeConstraint")
+hinge.Part0 = doorFrame
+hinge.Part1 = door
+hinge.CFrame0 = CFrame.new(0, 0, 0)
+hinge.CFrame1 = CFrame.new(0, 0, 0)
+hinge.Parent = doorFrame
+
+-- Motorized hinge
+hinge.ActuatorType = Enum.ActuatorType.Motor
+hinge.MotorMaxAcceleration = 100
+hinge.MotorMaxTorque = 10000
+hinge.AngularVelocity = 1  -- Rotates continuously
+
+-- SpringConstraint
+local spring = Instance.new("SpringConstraint")
+spring.Part0 = part1
+spring.Part1 = part2
+spring.FreeLength = 10
+spring.Stiffness = 100
+spring.Damping = 5
+spring.Parent = part1
+
+-- RopeConstraint
+local rope = Instance.new("RopeConstraint")
+rope.Part0 = anchor
+rope.Part1 = swingingObject
+rope.Length = 20
+rope.Parent = anchor</code></pre>
+
+    <h2>19.3 Applying Forces</h2>
+
+    <pre><code>-- ApplyImpulse (instant force)
+part:ApplyImpulse(Vector3.new(0, 1000, 0))
+
+-- Apply force over time with BodyMovers (legacy) or constraints
+-- Use VectorForce for continuous force
+local vectorForce = Instance.new("VectorForce")
+vectorForce.Force = Vector3.new(0, 100, 0)
+vectorForce.ApplyAtCenterOfMass = true
+vectorForce.Parent = part
+
+-- Attach to world (or another part)
+local attachment = Instance.new("Attachment")
+attachment.Parent = part
+vectorForce.Attachment0 = attachment
+
+-- LinearVelocity (constant speed)
+local linearVelocity = Instance.new("LinearVelocity")
+linearVelocity.VectorVelocity = Vector3.new(10, 0, 0)
+linearVelocity.MaxForce = 10000
+linearVelocity.Attachment0 = attachment
+linearVelocity.Parent = part
+
+-- AngularVelocity (constant rotation)
+local angularVelocity = Instance.new("AngularVelocity")
+angularVelocity.AngularVelocity = Vector3.new(0, 5, 0)
+angularVelocity.MaxTorque = 10000
+angularVelocity.Attachment0 = attachment
+angularVelocity.Parent = part</code></pre>
+
+    <h2>19.4 Character Physics</h2>
+
+    <pre><code>-- Modify humanoid physics
+local humanoid = character:WaitForChild("Humanoid")
+
+humanoid.WalkSpeed = 32       -- Default is 16
+humanoid.JumpPower = 75       -- Default is 50
+humanoid.JumpHeight = 10      -- Alternative to JumpPower
+humanoid.HipHeight = 2        -- Height off ground
+
+-- Platform stand (no physics control)
+humanoid.PlatformStand = true
+
+-- Set state
+humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+
+-- Disable state
+humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+
+-- Root part physics
+local rootPart = character:WaitForChild("HumanoidRootPart")
+rootPart.AssemblyLinearVelocity = Vector3.new(0, 50, 0)  -- Launch up</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Anchored parts don't move; unanchored parts follow physics</li>
+            <li>WeldConstraints attach parts together</li>
+            <li>HingeConstraints create rotating joints</li>
+            <li>ApplyImpulse for instant force; constraints for continuous</li>
+            <li>Humanoid properties control character physics</li>
+        </ul>
+    </div>
+
+
+
+    <!-- PART VI: ADVANCED SCRIPTING -->
+    <div class="part-divider" id="part6">
+        <div class="part-number">Part VI</div>
+        <h1 class="part-title">Advanced Scripting</h1>
+        <p class="part-desc">Master advanced techniques including client-server communication, remote events, and sophisticated module systems for professional-grade games.</p>
+    </div>
+
+    <!-- Chapter 20 -->
+    <h1 id="ch20">Chapter 20: RemoteEvents and RemoteFunctions</h1>
+
+    <div class="chapter-intro">
+        <p>Client-server communication is essential for multiplayer games. This chapter covers the tools and patterns for secure, efficient networking.</p>
+    </div>
+
+    <h2>20.1 Understanding Client-Server Architecture</h2>
+
+    <p>Roblox uses a client-server model:</p>
+
+    <ul>
+        <li><strong>Server:</strong> Authoritative, handles game logic, data storage</li>
+        <li><strong>Client:</strong> Handles input, rendering, UI; can be exploited</li>
+    </ul>
+
+    <pre><code>-- Communication flow
+Client --(RemoteEvent)--> Server (trusted)
+Server --(RemoteEvent)--> Client (untrusted)
+
+-- Never trust the client
+-- Server must validate all incoming data</code></pre>
+
+    <h2>20.2 RemoteEvents</h2>
+
+    <p>RemoteEvents enable one-way communication:</p>
+
+    <pre><code>-- Setup (create in ReplicatedStorage)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local damageEvent = Instance.new("RemoteEvent")
+damageEvent.Name = "DamagePlayer"
+damageEvent.Parent = ReplicatedStorage
+
+local updateUI = Instance.new("RemoteEvent")
+updateUI.Name = "UpdateUI"
+updateUI.Parent = ReplicatedStorage
+
+-- Client to Server (ClientScript)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local damageEvent = ReplicatedStorage:WaitForChild("DamagePlayer")
+
+-- Fire event to server
+damageEvent:FireServer(25)  -- Request 25 damage
+
+-- Server to Client (ServerScript)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local updateUI = ReplicatedStorage:WaitForChild("UpdateUI")
+
+-- Fire event to specific client
+updateUI:FireClient(player, "Score: 100")
+
+-- Fire to all clients
+updateUI:FireAllClients("Game Starting!")</code></pre>
+
+    <h2>20.3 Handling RemoteEvents</h2>
+
+    <pre><code>-- Server handler (ServerScript)
+damageEvent.OnServerEvent:Connect(function(player, damageAmount)
+    -- Validate input!
+    if typeof(damageAmount) ~= "number" then return end
+    if damageAmount < 0 or damageAmount > 100 then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+    
+    -- Apply damage
+    humanoid:TakeDamage(damageAmount)
+    print(player.Name .. " took " .. damageAmount .. " damage")
+end)
+
+-- Client handler (LocalScript)
+updateUI.OnClientEvent:Connect(function(message)
+    -- Update UI with message
+    print("UI Update: " .. message)
+end)</code></pre>
+
+    <h2>20.4 RemoteFunctions</h2>
+
+    <p>RemoteFunctions enable request-response communication:</p>
+
+    <pre><code>-- Setup
+local getData = Instance.new("RemoteFunction")
+getData.Name = "GetPlayerData"
+getData.Parent = ReplicatedStorage
+
+-- Server handler
+getData.OnServerInvoke = function(player, dataType)
+    -- Validate
+    if typeof(dataType) ~= "string" then return nil end
+    
+    -- Return data
+    if dataType == "level" then
+        return 25
+    elseif dataType == "coins" then
+        return 1000
+    end
+    
+    return nil
+end
+
+-- Client invocation (yields until response)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local getData = ReplicatedStorage:WaitForChild("GetPlayerData")
+
+local level = getData:InvokeServer("level")
+print("Level: " .. level)  -- Level: 25</code></pre>
+
+    <h2>20.5 Security Best Practices</h2>
+
+    <pre><code>-- Rate limiting
+local lastRequest = {}
+
+remoteEvent.OnServerEvent:Connect(function(player, ...)
+    local now = tick()
+    if lastRequest[player] and now - lastRequest[player] < 0.5 then
+        return  -- Too fast, ignore
+    end
+    lastRequest[player] = now
+    
+    -- Process request
+end)
+
+-- Input validation
+function validatePosition(pos)
+    return typeof(pos) == "Vector3" 
+        and math.abs(pos.X) < 10000 
+        and math.abs(pos.Y) < 10000 
+        and math.abs(pos.Z) < 10000
+end
+
+-- Sanity checks
+function processPurchase(player, itemId, price)
+    -- Verify player has enough money
+    local playerMoney = getPlayerMoney(player)
+    if playerMoney < price then
+        return false, "Insufficient funds"
+    end
+    
+    -- Verify item exists and price is correct
+    local itemData = getItemData(itemId)
+    if not itemData or itemData.price ~= price then
+        return false, "Invalid item"
+    end
+    
+    -- Process purchase
+    deductMoney(player, price)
+    giveItem(player, itemId)
+    return true, "Success"
+end</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>RemoteEvents enable one-way client-server communication</li>
+            <li>RemoteFunctions enable request-response patterns</li>
+            <li>Always validate input on the server</li>
+            <li>Never trust the client; server is authoritative</li>
+            <li>Implement rate limiting to prevent spam</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 21 -->
+    <h1 id="ch21">Chapter 21: Client-Server Communication</h1>
+
+    <div class="chapter-intro">
+        <p>Building on RemoteEvents, this chapter explores advanced patterns for efficient, secure client-server communication in multiplayer games.</p>
+    </div>
+
+    <h2>21.1 Network Efficiency</h2>
+
+    <p>Minimize network traffic for better performance:</p>
+
+    <pre><code>-- Batch updates instead of individual calls
+local pendingUpdates = {}
+
+local function queueUpdate(player, data)
+    pendingUpdates[player] = data
+end
+
+-- Send all updates at once
+RunService.Heartbeat:Connect(function()
+    for player, data in pairs(pendingUpdates) do
+        updateEvent:FireClient(player, data)
+    end
+    pendingUpdates = {}
+end)
+
+-- Compress data
+local function compressPosition(pos)
+    -- Send as integers instead of floats
+    return {
+        math.floor(pos.X * 10),
+        math.floor(pos.Y * 10),
+        math.floor(pos.Z * 10)
+    }
+end</code></pre>
+
+    <h2>21.2 State Synchronization</h2>
+
+    <pre><code>-- Server-side state manager
+local GameState = {
+    players = {},
+    objects = {}
+}
+
+function GameState:setPlayerData(player, key, value)
+    if not self.players[player] then
+        self.players[player] = {}
+    end
+    
+    local oldValue = self.players[player][key]
+    self.players[player][key] = value
+    
+    -- Only sync if changed
+    if oldValue ~= value then
+        syncEvent:FireClient(player, key, value)
+    end
+end
+
+function GameState:replicateToClient(player)
+    -- Send full state on join
+    stateSyncEvent:FireClient(player, self.players[player])
+end
+
+-- Client-side state
+local ClientState = {}
+
+stateSyncEvent.OnClientEvent:Connect(function(data)
+    for key, value in pairs(data) do
+        ClientState[key] = value
+    end
+end)</code></pre>
+
+    <h2>21.3 Prediction and Reconciliation</h2>
+
+    <pre><code>-- Client-side prediction
+local predictedPosition = character.HumanoidRootPart.Position
+
+UserInputService.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.Space then
+        -- Predict jump immediately
+        predictedPosition = predictedPosition + Vector3.new(0, 10, 0)
+        
+        -- Tell server
+        jumpEvent:FireServer()
+    end
+end)
+
+-- Server reconciliation
+local serverPositions = {}
+
+RunService.Heartbeat:Connect(function()
+    for player, character in pairs(characters) do
+        local rootPart = character:FindFirstChild("HumanoidRootPart")
+        if rootPart then
+            serverPositions[player] = rootPart.Position
+        end
+    end
+end)
+
+-- Validate client position
+function validateMovement(player, reportedPosition)
+    local serverPos = serverPositions[player]
+    if not serverPos then return false end
+    
+    local distance = (reportedPosition - serverPos).Magnitude
+    return distance < 50  -- Max reasonable distance
+end</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Batch network updates to reduce traffic</li>
+            <li>Only sync changed data</li>
+            <li>Compress data when possible</li>
+            <li>Use client-side prediction for responsive feel</li>
+            <li>Server reconciles and validates all movement</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 22 -->
+    <h1 id="ch22">Chapter 22: Advanced Module Systems</h1>
+
+    <div class="chapter-intro">
+        <p>Professional games need organized, scalable code architecture. This chapter covers advanced module patterns and project organization.</p>
+    </div>
+
+    <h2>22.1 Service Pattern</h2>
+
+    <pre><code>-- CurrencyService.lua
+local CurrencyService = {}
+
+-- Private state
+local playerBalances = {}
+local transactionHistory = {}
+
+-- Constants
+local STARTING_BALANCE = 100
+local MAX_BALANCE = 999999
+
+-- Initialize
+function CurrencyService:init()
+    local Players = game:GetService("Players")
+    
+    Players.PlayerAdded:Connect(function(player)
+        playerBalances[player] = STARTING_BALANCE
+    end)
+    
+    Players.PlayerRemoving:Connect(function(player)
+        playerBalances[player] = nil
+    end)
+end
+
+-- Public API
+function CurrencyService:getBalance(player)
+    return playerBalances[player] or 0
+end
+
+function CurrencyService:add(player, amount)
+    if amount <= 0 then return false end
+    
+    local current = self:getBalance(player)
+    local newBalance = math.min(current + amount, MAX_BALANCE)
+    
+    playerBalances[player] = newBalance
+    self:logTransaction(player, "add", amount)
+    
+    return true
+end
+
+function CurrencyService:subtract(player, amount)
+    if amount <= 0 then return false end
+    
+    local current = self:getBalance(player)
+    if current < amount then return false end
+    
+    playerBalances[player] = current - amount
+    self:logTransaction(player, "subtract", amount)
+    
+    return true
+end
+
+-- Private function
+function CurrencyService:logTransaction(player, type, amount)
+    table.insert(transactionHistory, {
+        player = player.UserId,
+        type = type,
+        amount = amount,
+        time = os.time()
+    })
+end
+
+return CurrencyService</code></pre>
+
+    <h2>22.2 Event Bus Pattern</h2>
+
+    <pre><code>-- EventBus.lua
+local EventBus = {}
+
+local events = {}
+
+function EventBus:on(eventName, callback)
+    if not events[eventName] then
+        events[eventName] = {}
+    end
+    
+    table.insert(events[eventName], callback)
+    
+    -- Return unsubscribe function
+    return function()
+        for i, cb in ipairs(events[eventName]) do
+            if cb == callback then
+                table.remove(events[eventName], i)
+                break
+            end
+        end
+    end
+end
+
+function EventBus:emit(eventName, ...)
+    if not events[eventName] then return end
+    
+    for _, callback in ipairs(events[eventName]) do
+        task.spawn(callback, ...)  -- Spawn in new thread
+    end
+end
+
+return EventBus
+
+-- Usage
+local EventBus = require(game.ReplicatedStorage.EventBus)
+
+-- Subscribe
+local unsubscribe = EventBus:on("PlayerDied", function(player, killer)
+    print(player.Name .. " was killed by " .. killer.Name)
+end)
+
+-- Emit
+EventBus:emit("PlayerDied", victim, killer)
+
+-- Unsubscribe
+unsubscribe()</code></pre>
+
+    <h2>22.3 Component Pattern</h2>
+
+    <pre><code>-- Component system for entity behavior
+local Components = {}
+
+-- Health Component
+Components.Health = {}
+Components.Health.__index = Components.Health
+
+function Components.Health.new(entity, maxHealth)
+    local self = setmetatable({}, Components.Health)
+    self.entity = entity
+    self.maxHealth = maxHealth
+    self.currentHealth = maxHealth
+    return self
+end
+
+function Components.Health:takeDamage(amount)
+    self.currentHealth = math.max(0, self.currentHealth - amount)
+    if self.currentHealth <= 0 then
+        self.entity:destroy()
+    end
+end
+
+-- Movement Component
+Components.Movement = {}
+Components.Movement.__index = Components.Movement
+
+function Components.Movement.new(entity, speed)
+    local self = setmetatable({}, Components.Movement)
+    self.entity = entity
+    self.speed = speed
+    self.velocity = Vector3.new()
+    return self
+end
+
+function Components.Movement:move(direction)
+    self.velocity = direction * self.speed
+end
+
+-- Entity with components
+local Entity = {}
+Entity.__index = Entity
+
+function Entity.new(name)
+    local self = setmetatable({}, Entity)
+    self.name = name
+    self.components = {}
+    return self
+end
+
+function Entity:addComponent(componentType, ...)
+    local component = componentType.new(self, ...)
+    self.components[componentType] = component
+    return component
+end
+
+function Entity:getComponent(componentType)
+    return self.components[componentType]
+end
+
+return Components</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Service pattern encapsulates game systems</li>
+            <li>Event bus decouples communication between systems</li>
+            <li>Component pattern enables flexible entity behavior</li>
+            <li>Keep modules focused on single responsibilities</li>
+        </ul>
+    </div>
+
+
+
+    <!-- PART VII: PROFESSIONAL DEVELOPMENT -->
+    <div class="part-divider" id="part7">
+        <div class="part-number">Part VII</div>
+        <h1 class="part-title">Professional Development</h1>
+        <p class="part-desc">Elevate your code quality with professional practices: organization, optimization, security, and debugging techniques used by top developers.</p>
+    </div>
+
+    <!-- Chapter 23 -->
+    <h1 id="ch23">Chapter 23: Code Organization and Architecture</h1>
+
+    <div class="chapter-intro">
+        <p>Well-organized code is maintainable, scalable, and collaborative. This chapter covers professional architecture patterns for Roblox games.</p>
+    </div>
+
+    <h2>23.1 Project Structure</h2>
+
+    <p>A well-organized project structure:</p>
+
+    <pre><code>ServerScriptService/
+├── Main.server.lua          -- Entry point
+├── Services/
+│   ├── PlayerService.lua
+│   ├── GameService.lua
+│   └── EconomyService.lua
+└── Systems/
+    ├── CombatSystem.lua
+    └── ProgressionSystem.lua
+
+ReplicatedStorage/
+├── Shared/
+│   ├── Config.lua
+│   ├── Constants.lua
+│   └── Utils/
+│       ├── MathUtils.lua
+│       └── TableUtils.lua
+├── Modules/
+│   ├── WeaponModule.lua
+│   └── ItemModule.lua
+└── Remotes/
+    ├── Events/
+    └── Functions/
+
+StarterPlayerScripts/
+├── ClientMain.client.lua    -- Client entry
+├── Controllers/
+│   ├── UIController.lua
+│   └── InputController.lua
+└── Components/
+    ├── HealthBar.lua
+    └── InventoryUI.lua</code></pre>
+
+    <h2>23.2 Configuration Management</h2>
+
+    <pre><code>-- Config.lua (in ReplicatedStorage)
+local Config = {
+    -- Game settings
+    GAME = {
+        MAX_PLAYERS = 20,
+        ROUND_DURATION = 300,
+        INTERMISSION_DURATION = 30
+    },
+    
+    -- Player settings
+    PLAYER = {
+        STARTING_HEALTH = 100,
+        STARTING_SPEED = 16,
+        RESPAWN_TIME = 5
+    },
+    
+    -- Economy settings
+    ECONOMY = {
+        STARTING_COINS = 100,
+        DAILY_BONUS = 50,
+        MAX_COINS = 999999
+    },
+    
+    -- Experience settings
+    XP = {
+        BASE_XP_PER_LEVEL = 100,
+        XP_MULTIPLIER = 1.5,
+        MAX_LEVEL = 100
+    }
+}
+
+return Config
+
+-- Usage
+local Config = require(game.ReplicatedStorage.Config)
+local maxPlayers = Config.GAME.MAX_PLAYERS</code></pre>
+
+    <h2>23.3 Constants Management</h2>
+
+    <pre><code>-- Constants.lua
+local Constants = {
+    -- Teams
+    TEAMS = {
+        RED = "Red Team",
+        BLUE = "Blue Team",
+        SPECTATOR = "Spectators"
+    },
+    
+    -- Game states
+    GAME_STATE = {
+        WAITING = "Waiting",
+        INTERMISSION = "Intermission",
+        PLAYING = "Playing",
+        ENDED = "Ended"
+    },
+    
+    -- Item rarities
+    RARITY = {
+        COMMON = {name = "Common", color = Color3.fromRGB(169, 169, 169)},
+        UNCOMMON = {name = "Uncommon", color = Color3.fromRGB(0, 255, 0)},
+        RARE = {name = "Rare", color = Color3.fromRGB(0, 100, 255)},
+        EPIC = {name = "Epic", color = Color3.fromRGB(150, 0, 255)},
+        LEGENDARY = {name = "Legendary", color = Color3.fromRGB(255, 200, 0)}
+    },
+    
+    -- Remote event names
+    REMOTES = {
+        PLAYER_DAMAGED = "PlayerDamaged",
+        ITEM_PURCHASED = "ItemPurchased",
+        GAME_STATE_CHANGED = "GameStateChanged"
+    }
+}
+
+return Constants</code></pre>
+
+    <h2>23.4 Initialization Pattern</h2>
+
+    <pre><code>-- Main.server.lua
+local Services = game.ServerScriptService.Services
+
+-- Load all services
+local loadedServices = {}
+
+for _, moduleScript in ipairs(Services:GetChildren()) do
+    if moduleScript:IsA("ModuleScript") then
+        local service = require(moduleScript)
+        loadedServices[moduleScript.Name] = service
+        
+        -- Initialize if init function exists
+        if service.init then
+            service:init()
+        end
+    end
+end
+
+-- Start game loop
+local GameLoop = {}
+
+function GameLoop:start()
+    while true do
+        self:intermission()
+        self:round()
+        self:endRound()
+    end
+end
+
+function GameLoop:intermission()
+    -- Wait for players
+end
+
+function GameLoop:round()
+    -- Main gameplay
+end
+
+function GameLoop:endRound()
+    -- Show results
+end
+
+GameLoop:start()</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Organize code by purpose: Services, Systems, Controllers</li>
+            <li>Centralize configuration in Config modules</li>
+            <li>Use constants for magic numbers and strings</li>
+            <li>Create clear initialization patterns</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 24 -->
+    <h1 id="ch24">Chapter 24: Performance Optimization</h1>
+
+    <div class="chapter-intro">
+        <p>Optimized games run smoothly and retain players. This chapter covers techniques for identifying and fixing performance bottlenecks.</p>
+    </div>
+
+    <h2>24.1 Measuring Performance</h2>
+
+    <pre><code>-- Microprofiler (F6 in Studio)
+-- Shows detailed frame timing
+
+-- Script performance tracking
+local function benchmark(name, func, iterations)
+    local start = tick()
+    
+    for i = 1, iterations do
+        func()
+    end
+    
+    local elapsed = tick() - start
+    print(name .. ": " .. (elapsed * 1000) .. "ms for " .. iterations .. " iterations")
+end
+
+-- Usage
+benchmark("Table insert", function()
+    local t = {}
+    table.insert(t, 1)
+end, 10000)</code></pre>
+
+    <h2>24.2 Common Optimizations</h2>
+
+    <pre><code>-- Cache frequently accessed values
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- Bad: Getting service every frame
+RunService.Heartbeat:Connect(function()
+    game:GetService("Players")  -- Don't do this
+end)
+
+-- Good: Cache once
+local Players = game:GetService("Players")
+RunService.Heartbeat:Connect(function()
+    -- Use cached Players
+end)
+
+-- Cache object references
+local part = workspace.Part
+
+-- Bad
+for i = 1, 100 do
+    workspace.Part.Position = Vector3.new(i, 0, 0)  -- Slow lookup
+end
+
+-- Good
+local part = workspace.Part
+for i = 1, 100 do
+    part.Position = Vector3.new(i, 0, 0)
+end
+
+-- Pre-allocate tables
+-- Bad
+local t = {}
+for i = 1, 1000 do
+    t[i] = i  -- Table resizes each iteration
+end
+
+-- Good
+local t = table.create(1000)  -- Pre-allocate
+for i = 1, 1000 do
+    t[i] = i
+end
+
+-- Use local variables
+-- Bad
+for i = 1, 100 do
+    globalCounter = globalCounter + 1  -- Global lookup
+end
+
+-- Good
+local counter = 0
+for i = 1, 100 do
+    counter = counter + 1
+end
+globalCounter = counter</code></pre>
+
+    <h2>24.3 Rendering Optimization</h2>
+
+    <pre><code>-- Reduce part count
+-- Combine static parts into meshes
+-- Use MeshParts instead of multiple Parts
+
+-- Level of Detail (LOD)
+local function updateLOD(playerPosition)
+    for _, object in ipairs(detailObjects) do
+        local distance = (object.Position - playerPosition).Magnitude
+        
+        if distance < 50 then
+            object.LODLevel = "High"
+        elseif distance < 150 then
+            object.LODLevel = "Medium"
+        else
+            object.LODLevel = "Low"
+        end
+    end
+end
+
+-- StreamingEnabled (in Workspace properties)
+-- Automatically loads/unloads distant parts
+
+-- Culling
+local camera = workspace.CurrentCamera
+local function shouldRender(object)
+    local distance = (object.Position - camera.CFrame.Position).Magnitude
+    local inView = camera:IsPartVisible(object)
+    return distance < 500 and inView
+end</code></pre>
+
+    <h2>24.4 Script Optimization</h2>
+
+    <pre><code>-- Use Heartbeat for physics updates
+RunService.Heartbeat:Connect(function(deltaTime)
+    -- Physics-related code
+end)
+
+-- Use RenderStepped only for UI/camera (client only)
+RunService.RenderStepped:Connect(function(deltaTime)
+    -- Camera updates, UI animations
+end)
+
+-- Debounce expensive operations
+local lastUpdate = 0
+local UPDATE_INTERVAL = 0.1  -- 10 times per second
+
+RunService.Heartbeat:Connect(function()
+    local now = tick()
+    if now - lastUpdate < UPDATE_INTERVAL then
+        return
+    end
+    lastUpdate = now
+    
+    -- Expensive update code
+end)
+
+-- Object pooling
+local objectPool = {}
+
+function getPooledObject()
+    if #objectPool > 0 then
+        return table.remove(objectPool)
+    end
+    return createNewObject()
+end
+
+function returnToPool(object)
+    object:Reset()
+    table.insert(objectPool, object)
+end</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Cache service references and frequently accessed objects</li>
+            <li>Pre-allocate tables when size is known</li>
+            <li>Use local variables instead of globals in loops</li>
+            <li>Implement LOD for distant objects</li>
+            <li>Use object pooling for frequently created/destroyed objects</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 25 -->
+    <h1 id="ch25">Chapter 25: Security and Anti-Exploit</h1>
+
+    <div class="chapter-intro">
+        <p>Security is critical for multiplayer games. This chapter covers protecting your game from exploiters and maintaining fair gameplay.</p>
+    </div>
+
+    <h2>25.1 Understanding Exploits</h2>
+
+    <p>Common exploit types:</p>
+
+    <ul>
+        <li><strong>Speed Hacks:</strong> Moving faster than allowed</li>
+        <li><strong>Fly Hacks:</strong> Flying without permission</li>
+        <li><strong>Teleporting:</strong> Instant position changes</li>
+        <li><strong>Remote Spam:</strong> Flooding servers with requests</li>
+        <li><strong>Data Manipulation:</strong> Modifying client data</li>
+    </ul>
+
+    <h2>25.2 Server Authority</h2>
+
+    <pre><code>-- Never trust the client
+-- Server validates everything
+
+-- Bad: Client tells server position
+moveEvent.OnServerEvent:Connect(function(player, newPosition)
+    player.Character.HumanoidRootPart.Position = newPosition  -- Dangerous!
+end)
+
+-- Good: Client requests movement, server validates
+moveRequest.OnServerEvent:Connect(function(player, direction)
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+    
+    -- Server controls movement
+    humanoid:Move(direction)
+    
+    -- Validate position periodically
+    validatePosition(player)
+end)
+
+-- Position validation
+function validatePosition(player)
+    local character = player.Character
+    if not character then return end
+    
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+    
+    local currentPos = rootPart.Position
+    local lastPos = lastPositions[player]
+    
+    if lastPos then
+        local distance = (currentPos - lastPos).Magnitude
+        local timeDelta = tick() - lastPositionTimes[player]
+        local maxDistance = humanoid.WalkSpeed * timeDelta * 1.5  -- Allow some tolerance
+        
+        if distance > maxDistance then
+            -- Possible teleport/speed hack
+            rootPart.Position = lastPos  -- Reset position
+            warn(player.Name .. " moved too fast!")
+        end
+    end
+    
+    lastPositions[player] = currentPos
+    lastPositionTimes[player] = tick()
+end</code></pre>
+
+    <h2>25.3 Rate Limiting</h2>
+
+    <pre><code>-- Prevent remote event spam
+local rateLimits = {}
+local RATE_LIMIT = 10  -- Max calls per second
+
+function checkRateLimit(player, action)
+    local key = player.UserId .. "_" .. action
+    local now = tick()
+    
+    if not rateLimits[key] then
+        rateLimits[key] = {count = 0, resetTime = now + 1}
+    end
+    
+    local limit = rateLimits[key]
+    
+    if now > limit.resetTime then
+        limit.count = 0
+        limit.resetTime = now + 1
+    end
+    
+    limit.count = limit.count + 1
+    
+    if limit.count > RATE_LIMIT then
+        warn(player.Name .. " exceeded rate limit for " .. action)
+        return false
+    end
+    
+    return true
+end
+
+-- Usage
+remoteEvent.OnServerEvent:Connect(function(player, ...)
+    if not checkRateLimit(player, "action") then
+        return  -- Ignore the request
+    end
+    
+    -- Process the request
+end)</code></pre>
+
+    <h2>25.4 Data Validation</h2>
+
+    <pre><code>-- Validate all incoming data
+function validateType(value, expectedType)
+    return typeof(value) == expectedType
+end
+
+function validateNumber(value, min, max)
+    if typeof(value) ~= "number" then return false end
+    if min and value < min then return false end
+    if max and value > max then return false end
+    return true
+end
+
+function validateString(value, maxLength)
+    if typeof(value) ~= "string" then return false end
+    if maxLength and #value > maxLength then return false end
+    return true
+end
+
+function validateVector3(value, maxMagnitude)
+    if typeof(value) ~= "Vector3" then return false end
+    if maxMagnitude and value.Magnitude > maxMagnitude then return false end
+    return true
+end
+
+-- Usage in remote handler
+purchaseEvent.OnServerEvent:Connect(function(player, itemId, quantity)
+    -- Validate all inputs
+    if not validateType(itemId, "string") then return end
+    if not validateNumber(quantity, 1, 100) then return end
+    
+    -- Validate item exists
+    local itemData = ItemDatabase[itemId]
+    if not itemData then return end
+    
+    -- Process purchase
+end)</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Server is always authoritative; never trust the client</li>
+            <li>Validate all incoming data types and ranges</li>
+            <li>Implement rate limiting on all remote events</li>
+            <li>Validate player positions to prevent speed/teleport hacks</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 26 -->
+    <h1 id="ch26">Chapter 26: Debugging and Error Handling</h1>
+
+    <div class="chapter-intro">
+        <p>Bugs are inevitable. This chapter covers tools and techniques for finding and fixing issues in your Roblox code.</p>
+    </div>
+
+    <h2>26.1 The Output Window</h2>
+
+    <p>Your primary debugging tool:</p>
+
+    <pre><code>-- print() for general output
+print("Player joined:", player.Name)
+
+-- warn() for warnings (yellow)
+warn("Deprecated function called")
+
+-- error() for critical errors (red, stops execution)
+error("Something went wrong!")
+
+-- Output filters
+-- Use the Output window filters to show/hide:
+-- - Print output
+-- - Warnings
+-- - Errors
+-- - Info messages</code></pre>
+
+    <h2>26.2 Error Handling with pcall</h2>
+
+    <pre><code>-- pcall (protected call) catches errors
+local success, result = pcall(function()
+    -- Code that might error
+    local x = 10 / 0  -- Division by zero
+    return x
+end)
+
+if success then
+    print("Result:", result)
+else
+    warn("Error occurred:", result)
+end
+
+-- xpcall with error handler
+local success, result = xpcall(function()
+    riskyOperation()
+end, function(err)
+    -- Error handler
+    warn("Custom error handler:", err)
+    return "default value"
+end)
+
+-- Real-world example
+local function loadPlayerData(player)
+    local success, data = pcall(function()
+        return DataStore:GetAsync("Player_" .. player.UserId)
+    end)
+    
+    if success then
+        return data or defaultData
+    else
+        warn("Failed to load data for " .. player.Name .. ": " .. data)
+        return defaultData
+    end
+end</code></pre>
+
+    <h2>26.3 Debugging Techniques</h2>
+
+    <pre><code>-- Add debug prints
+function complexFunction(param1, param2)
+    print("DEBUG: Entering complexFunction")
+    print("DEBUG: param1 =", param1)
+    print("DEBUG: param2 =", param2)
+    
+    local result = param1 + param2
+    print("DEBUG: result =", result)
+    
+    return result
+end
+
+-- Conditional debug
+local DEBUG = true
+
+function debugPrint(...)
+    if DEBUG then
+        print("[DEBUG]", ...)
+    end
+end
+
+-- Assert for assumptions
+local function divide(a, b)
+    assert(typeof(a) == "number", "a must be a number")
+    assert(typeof(b) == "number", "b must be a number")
+    assert(b ~= 0, "Cannot divide by zero")
+    
+    return a / b
+end
+
+-- Stack trace
+local function trace()
+    print(debug.traceback("Stack trace:"))
+end</code></pre>
+
+    <h2>26.4 Studio Debugger</h2>
+
+    <pre><code>-- Breakpoints
+-- Click in the gutter next to line numbers to set breakpoints
+-- Execution pauses at breakpoints
+
+-- Step through code
+-- F10: Step Over (execute current line, move to next)
+-- F11: Step Into (enter function calls)
+-- Shift+F11: Step Out (exit current function)
+-- F5: Continue (resume execution)
+
+-- Watch window
+-- Add variables to watch their values change
+
+-- Call stack
+-- See the chain of function calls leading to current line
+
+-- Conditional breakpoints
+-- Right-click breakpoint to add condition
+-- Example: player.Health < 50</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Use print(), warn(), and error() for different message types</li>
+            <li>Wrap risky code in pcall to catch errors gracefully</li>
+            <li>Use assert() to validate assumptions</li>
+            <li>Set breakpoints and use the Studio debugger</li>
+            <li>Remove or disable debug code before publishing</li>
+        </ul>
+    </div>
+
+
+
+    <!-- PART VIII: BUILDING COMPLETE GAMES -->
+    <div class="part-divider" id="part8">
+        <div class="part-number">Part VIII</div>
+        <h1 class="part-title">Building Complete Games</h1>
+        <p class="part-desc">Apply everything you have learned to build complete, publishable games. This section walks through real projects from concept to deployment.</p>
+    </div>
+
+    <!-- Chapter 27 -->
+    <h1 id="ch27">Chapter 27: Game Design Fundamentals</h1>
+
+    <div class="chapter-intro">
+        <p>Before writing code, understand what makes games fun and engaging. This chapter covers game design principles specific to Roblox.</p>
+    </div>
+
+    <h2>27.1 Core Game Loop</h2>
+
+    <p>Every successful game has a compelling core loop:</p>
+
+    <pre><code>-- Example: Obby Core Loop
+-- 1. Player spawns at checkpoint
+-- 2. Player attempts obstacle
+-- 3. Success: Advance to next checkpoint
+-- 4. Failure: Respawn at last checkpoint
+-- 5. Repeat until finish
+
+-- Example: Tycoon Core Loop
+-- 1. Player earns money
+-- 2. Player buys upgrades
+-- 3. Upgrades generate more money
+-- 4. Player expands their tycoon
+-- 5. Repeat and compete with others</code></pre>
+
+    <h2>27.2 Player Retention Mechanics</h2>
+
+    <pre><code>-- Progression system
+local Progression = {
+    levels = {},
+    achievements = {},
+    unlocks = {}
+}
+
+-- Daily rewards
+local DailyRewards = {
+    checkIn = function(player)
+        local lastLogin = getLastLogin(player)
+        local daysSince = (os.time() - lastLogin) / 86400
+        
+        if daysSince >= 1 then
+            giveReward(player, calculateStreakReward(player))
+            incrementStreak(player)
+        else
+            resetStreak(player)
+        end
+        
+        updateLastLogin(player)
+    end
+}
+
+-- Achievement system
+local Achievements = {
+    list = {
+        firstWin = {name = "First Victory", description = "Win your first round"},
+        collector = {name = "Collector", description = "Collect 100 items"},
+        speedster = {name = "Speedster", description = "Complete in under 60 seconds"}
+    },
+    
+    unlock = function(player, achievementId)
+        if not hasAchievement(player, achievementId) then
+            grantAchievement(player, achievementId)
+            notifyPlayer(player, "Achievement Unlocked: " .. Achievements.list[achievementId].name)
+        end
+    end
+}</code></pre>
+
+    <h2>27.3 Monetization Strategies</h2>
+
+    <pre><code>-- Gamepasses
+local Gamepasses = {
+    VIP = {id = 123456, benefits = {"2x Coins", "VIP Tag", "Special Chat Color"}},
+    SpeedBoost = {id = 123457, benefits = {"2x Walk Speed"}},
+    ExtraInventory = {id = 123458, benefits = {"+50 Inventory Slots"}}
+}
+
+-- Developer Products (consumables)
+local Products = {
+    coinPackSmall = {id = 123459, amount = 100},
+    coinPackMedium = {id = 123460, amount = 500},
+    coinPackLarge = {id = 123461, amount = 2000}
+}
+
+-- Purchase handling
+local MarketplaceService = game:GetService("MarketplaceService")
+
+MarketplaceService.ProcessReceipt = function(receiptInfo)
+    local player = Players:GetPlayerByUserId(receiptInfo.PlayerId)
+    if not player then return Enum.ProductPurchaseDecision.NotProcessedYet end
+    
+    local productId = receiptInfo.ProductId
+    
+    if productId == Products.coinPackSmall.id then
+        addCoins(player, Products.coinPackSmall.amount)
+    elseif productId == Products.coinPackMedium.id then
+        addCoins(player, Products.coinPackMedium.amount)
+    end
+    
+    return Enum.ProductPurchaseDecision.PurchaseGranted
+end</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Design a compelling core game loop first</li>
+            <li>Implement progression systems to keep players engaged</li>
+            <li>Use daily rewards to encourage return visits</li>
+            <li>Monetize through gamepasses and developer products</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 28 -->
+    <h1 id="ch28">Chapter 28: Complete Project: Obby Game</h1>
+
+    <div class="chapter-intro">
+        <p>Build a complete obstacle course (obby) game from scratch. This chapter provides the full implementation of a publishable obby.</p>
+    </div>
+
+    <h2>28.1 Project Overview</h2>
+
+    <p>Features of our obby game:</p>
+    <ul>
+        <li>Multiple stages with increasing difficulty</li>
+        <li>Checkpoint system</li>
+        <li>Timer and leaderboards</li>
+        <li>Death counter</li>
+        <li>Win screen with statistics</li>
+    </ul>
+
+    <h2>28.2 Checkpoint System</h2>
+
+    <pre><code>-- CheckpointSystem.lua (Server)
+local CheckpointSystem = {}
+
+local playerCheckpoints = {}
+local playerDeaths = {}
+
+function CheckpointSystem:init()
+    local Players = game:GetService("Players")
+    
+    Players.PlayerAdded:Connect(function(player)
+        playerCheckpoints[player] = 1
+        playerDeaths[player] = 0
+        
+        player.CharacterAdded:Connect(function(character)
+            self:respawnAtCheckpoint(player, character)
+        end)
+    end)
+    
+    Players.PlayerRemoving:Connect(function(player)
+        playerCheckpoints[player] = nil
+        playerDeaths[player] = nil
+    end)
+end
+
+function CheckpointSystem:setCheckpoint(player, checkpointNumber)
+    if checkpointNumber > (playerCheckpoints[player] or 1) then
+        playerCheckpoints[player] = checkpointNumber
+        self:notifyPlayer(player, "Checkpoint " .. checkpointNumber .. " reached!")
+    end
+end
+
+function CheckpointSystem:respawnAtCheckpoint(player, character)
+    local checkpointNum = playerCheckpoints[player] or 1
+    local checkpoint = workspace.Checkpoints:FindFirstChild("Checkpoint" .. checkpointNum)
+    
+    if checkpoint then
+        task.wait(0.1)  -- Wait for character to load
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        humanoidRootPart.CFrame = checkpoint.CFrame + Vector3.new(0, 5, 0)
+    end
+end
+
+function CheckpointSystem:recordDeath(player)
+    playerDeaths[player] = (playerDeaths[player] or 0) + 1
+end
+
+function CheckpointSystem:getStats(player)
+    return {
+        checkpoint = playerCheckpoints[player] or 1,
+        deaths = playerDeaths[player] or 0
+    }
+end
+
+return CheckpointSystem</code></pre>
+
+    <h2>28.3 Obby Handler</h2>
+
+    <pre><code>-- ObbyHandler.server.lua
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local CheckpointSystem = require(script.Parent.CheckpointSystem)
+CheckpointSystem:init()
+
+-- Setup kill bricks
+for _, killBrick in ipairs(workspace.KillBricks:GetChildren()) do
+    if killBrick:IsA("BasePart") then
+        killBrick.Touched:Connect(function(hit)
+            local character = hit.Parent
+            local player = Players:GetPlayerFromCharacter(character)
+            
+            if player then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    CheckpointSystem:recordDeath(player)
+                    humanoid.Health = 0
+                end
+            end
+        end)
+    end
+end
+
+-- Setup checkpoints
+for _, checkpoint in ipairs(workspace.Checkpoints:GetChildren()) do
+    if checkpoint:IsA("BasePart") then
+        local checkpointNum = tonumber(checkpoint.Name:match("%d+"))
+        
+        checkpoint.Touched:Connect(function(hit)
+            local character = hit.Parent
+            local player = Players:GetPlayerFromCharacter(character)
+            
+            if player and checkpointNum then
+                CheckpointSystem:setCheckpoint(player, checkpointNum)
+            end
+        end)
+    end
+end
+
+-- Setup win pad
+workspace.WinPad.Touched:Connect(function(hit)
+    local character = hit.Parent
+    local player = Players:GetPlayerFromCharacter(character)
+    
+    if player then
+        local stats = CheckpointSystem:getStats(player)
+        ReplicatedStorage.Events.GameWon:FireClient(player, stats)
+    end
+end)</code></pre>
+
+    <h2>28.4 Timer and Leaderboard</h2>
+
+    <pre><code>-- Timer.lua (Client)
+local Timer = {}
+
+local startTime = 0
+local running = false
+local gui = nil
+
+function Timer:start(timerGui)
+    gui = timerGui
+    startTime = tick()
+    running = true
+    
+    task.spawn(function()
+        while running do
+            local elapsed = tick() - startTime
+            local minutes = math.floor(elapsed / 60)
+            local seconds = math.floor(elapsed % 60)
+            local milliseconds = math.floor((elapsed % 1) * 100)
+            
+            gui.Text = string.format("%02d:%02d.%02d", minutes, seconds, milliseconds)
+            task.wait(0.03)
+        end
+    end)
+end
+
+function Timer:stop()
+    running = false
+    return tick() - startTime
+end
+
+return Timer</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Build systems modularly for maintainability</li>
+            <li>Server handles game state; client handles display</li>
+            <li>Use events to communicate between systems</li>
+            <li>Track player progress for engagement</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 29 -->
+    <h1 id="ch29">Chapter 29: Complete Project: Tycoon Game</h1>
+
+    <div class="chapter-intro">
+        <p>Build a complete tycoon game with money generation, upgrade systems, and competitive gameplay.</p>
+    </div>
+
+    <h2>29.1 Tycoon System</h2>
+
+    <pre><code>-- TycoonSystem.lua
+local TycoonSystem = {}
+
+local playerTycoons = {}
+local BASE_INCOME = 10
+local INCOME_INTERVAL = 1
+
+function TycoonSystem:init()
+    local Players = game:GetService("Players")
+    
+    Players.PlayerAdded:Connect(function(player)
+        self:createTycoon(player)
+    end)
+    
+    Players.PlayerRemoving:Connect(function(player)
+        playerTycoons[player] = nil
+    end)
+    
+    -- Income loop
+    task.spawn(function()
+        while true do
+            task.wait(INCOME_INTERVAL)
+            self:distributeIncome()
+        end
+    end)
+end
+
+function TycoonSystem:createTycoon(player)
+    playerTycoons[player] = {
+        money = 0,
+        totalEarned = 0,
+        multipliers = {
+            base = 1,
+            upgrades = 1,
+            gamepass = 1
+        },
+        upgrades = {},
+        collectors = 1
+    }
+end
+
+function TycoonSystem:distributeIncome()
+    for player, tycoon in pairs(playerTycoons) do
+        local income = BASE_INCOME * tycoon.collectors
+        
+        for _, multiplier in pairs(tycoon.multipliers) do
+            income = income * multiplier
+        end
+        
+        tycoon.money = tycoon.money + income
+        tycoon.totalEarned = tycoon.totalEarned + income
+        
+        -- Update client
+        self:updateClient(player)
+    end
+end
+
+function TycoonSystem:purchaseUpgrade(player, upgradeId)
+    local tycoon = playerTycoons[player]
+    if not tycoon then return false end
+    
+    local upgrade = UpgradeDatabase[upgradeId]
+    if not upgrade then return false end
+    
+    if tycoon.money < upgrade.cost then return false end
+    if tycoon.upgrades[upgradeId] then return false end
+    
+    tycoon.money = tycoon.money - upgrade.cost
+    tycoon.upgrades[upgradeId] = true
+    
+    -- Apply upgrade effect
+    if upgrade.type == "multiplier" then
+        tycoon.multipliers.upgrades = tycoon.multipliers.upgrades * upgrade.value
+    elseif upgrade.type == "collector" then
+        tycoon.collectors = tycoon.collectors + upgrade.value
+    end
+    
+    return true
+end
+
+function TycoonSystem:updateClient(player)
+    local tycoon = playerTycoons[player]
+    if not tycoon then return end
+    
+    local event = game.ReplicatedStorage.Events.UpdateTycoon
+    event:FireClient(player, {
+        money = tycoon.money,
+        totalEarned = tycoon.totalEarned,
+        collectors = tycoon.collectors
+    })
+end
+
+return TycoonSystem</code></pre>
+
+    <h2>29.2 Upgrade Database</h2>
+
+    <pre><code>-- UpgradeDatabase.lua
+local UpgradeDatabase = {
+    -- Money multipliers
+    betterTools = {
+        id = "betterTools",
+        name = "Better Tools",
+        description = "2x money from all sources",
+        cost = 500,
+        type = "multiplier",
+        value = 2
+    },
+    
+    advancedEquipment = {
+        id = "advancedEquipment",
+        name = "Advanced Equipment",
+        description = "2x money from all sources",
+        cost = 5000,
+        type = "multiplier",
+        value = 2
+    },
+    
+    -- Collectors
+    extraCollector = {
+        id = "extraCollector",
+        name = "Extra Collector",
+        description = "+1 money per second",
+        cost = 100,
+        type = "collector",
+        value = 1
+    },
+    
+    -- Visual upgrades
+    goldenFloor = {
+        id = "goldenFloor",
+        name = "Golden Floor",
+        description = "Make your tycoon shine",
+        cost = 10000,
+        type = "cosmetic",
+        value = "Golden"
+    }
+}
+
+return UpgradeDatabase</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Tycoons use passive income loops for engagement</li>
+            <li>Upgrade systems provide progression goals</li>
+            <li>Separate data (server) from display (client)</li>
+            <li>Balance costs and rewards carefully</li>
+        </ul>
+    </div>
+
+    <!-- Chapter 30 -->
+    <h1 id="ch30">Chapter 30: Publishing and Monetization</h1>
+
+    <div class="chapter-intro">
+        <p>Take your game from development to published experience. This chapter covers publishing, marketing, and monetizing your Roblox game.</p>
+    </div>
+
+    <h2>30.1 Preparing for Publication</h2>
+
+    <pre><code>-- Pre-publish checklist
+local PrePublish = {
+    checkPerformance = function()
+        -- Ensure frame rate is stable
+        -- Check memory usage
+        -- Verify no memory leaks
+    end,
+    
+    checkSecurity = function()
+        -- Validate all remote events
+        -- Check for exploits
+        -- Verify server authority
+    end,
+    
+    checkUX = function()
+        -- Test on multiple devices
+        -- Verify UI scaling
+        -- Check mobile touch targets
+    end,
+    
+    checkMonetization = function()
+        -- Test purchase flows
+        -- Verify gamepass benefits
+        -- Check developer products
+    end
+}</code></pre>
+
+    <h2>30.2 Publishing Steps</h2>
+
+    <ol>
+        <li><strong>Save your place:</strong> File > Save to Roblox</li>
+        <li><strong>Configure settings:</strong> Game Settings in Home tab
+            <ul>
+                <li>Set game name and description</li>
+                <li>Configure permissions</li>
+                <li>Set avatar type</li>
+            </ul>
+        </li>
+        <li><strong>Add thumbnails:</strong> Create compelling images</li>
+        <li><strong>Configure monetization:</strong> Set up gamepasses and products</li>
+        <li><strong>Publish:</strong> Make the game public</li>
+    </ol>
+
+    <h2>30.3 Marketing Your Game</h2>
+
+    <pre><code>-- Engagement strategies
+local Marketing = {
+    -- Social media
+    promoteOnSocial = function()
+        -- Share on Twitter, Discord, etc.
+        -- Create teaser videos
+        -- Engage with community
+    end,
+    
+    -- In-game events
+    hostEvents = function()
+        -- Double XP weekends
+        -- Limited-time items
+        -- Holiday events
+    end,
+    
+    -- Influencer outreach
+    partnerWithCreators = function()
+        -- Offer early access
+        -- Create creator codes
+        -- Sponsor videos
+    end,
+    
+    -- Community building
+    buildCommunity = function()
+        -- Create Discord server
+        -- Respond to feedback
+        -- Regular updates
+    end
+}</code></pre>
+
+    <h2>30.4 Analytics and Iteration</h2>
+
+    <pre><code>-- Track key metrics
+local Analytics = {
+    metrics = {
+        "DAU",           -- Daily Active Users
+        "Retention",     -- Day 1, 7, 30 retention
+        "SessionLength", -- Average play time
+        "Revenue",       -- Robux earned
+        "ARPU",          -- Average Revenue Per User
+        "Conversion"     -- % of players who purchase
+    },
+    
+    -- Use Roblox Analytics
+    trackEvent = function(eventName, player, data)
+        -- Log custom events
+        -- Analyze player behavior
+        -- Identify drop-off points
+    end
+}</code></pre>
+
+    <div class="takeaways">
+        <div class="takeaways-title">Key Takeaways</div>
+        <ul>
+            <li>Thoroughly test before publishing</li>
+            <li>Create compelling thumbnails and descriptions</li>
+            <li>Market through social media and events</li>
+            <li>Use analytics to guide improvements</li>
+            <li>Iterate based on player feedback</li>
+        </ul>
+    </div>
+
+    <!-- APPENDICES -->
+    <div class="part-divider" id="appendix">
+        <div class="part-number">Appendices</div>
+        <h1 class="part-title">Reference Materials</h1>
+        <p class="part-desc">Quick reference guides and additional resources for continued learning.</p>
+    </div>
+
+    <!-- Appendix A -->
+    <h1 id="app-a">Appendix A: Lua Quick Reference</h1>
+
+    <h2>Data Types</h2>
+    <table>
+        <thead>
+            <tr><th>Type</th><th>Example</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>nil</td><td>nil</td><td>Represents no value</td></tr>
+            <tr><td>boolean</td><td>true, false</td><td>Logical values</td></tr>
+            <tr><td>number</td><td>42, 3.14</td><td>Numeric values</td></tr>
+            <tr><td>string</td><td>"hello"</td><td>Text</td></tr>
+            <tr><td>table</td><td>{1, 2, 3}</td><td>Arrays and dictionaries</td></tr>
+            <tr><td>function</td><td>function() end</td><td>Callable code</td></tr>
+            <tr><td>userdata</td><td>workspace.Part</td><br>External objects</td></tr>
+            <tr><td>thread</td><td>coroutine</td><td>Concurrent execution</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Operators</h2>
+    <table>
+        <thead>
+            <tr><th>Category</th><th>Operators</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Arithmetic</td><td>+ - * / ^ % -</td></tr>
+            <tr><td>Comparison</td><td>== ~= < > <= >=</td></tr>
+            <tr><td>Logical</td><td>and or not</td></tr>
+            <tr><td>String</td><td>.. #</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Control Flow</h2>
+    <pre><code>-- if statement
+if condition then
+    -- code
+elseif otherCondition then
+    -- code
+else
+    -- code
+end
+
+-- while loop
+while condition do
+    -- code
+end
+
+-- for loop (numeric)
+for i = 1, 10 do
+    -- code
+end
+
+-- for loop (generic)
+for key, value in pairs(table) do
+    -- code
+end
+
+-- repeat loop
+repeat
+    -- code
+until condition</code></pre>
+
+    <h2>Standard Library Functions</h2>
+    <table>
+        <thead>
+            <tr><th>Function</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>print(...)</td><td>Output to console</td></tr>
+            <tr><td>typeof(value)</td><td>Get type name</td></tr>
+            <tr><td>tostring(value)</td><td>Convert to string</td></tr>
+            <tr><td>tonumber(value)</td><td>Convert to number</td></tr>
+            <tr><td>ipairs(table)</td><td>Iterate array</td></tr>
+            <tr><td>pairs(table)</td><td>Iterate dictionary</td></tr>
+            <tr><td>next(table)</td><td>Get next key-value</td></tr>
+            <tr><td>unpack(table)</td><td>Unpack array</td></tr>
+            <tr><td>select(index, ...)</td><td>Select arguments</td></tr>
+            <tr><td>error(message)</td><td>Raise error</td></tr>
+            <tr><td>pcall(func)</td><td>Protected call</td></tr>
+            <tr><td>assert(cond, msg)</td><td>Assert condition</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Appendix B -->
+    <h1 id="app-b">Appendix B: Roblox API Reference</h1>
+
+    <h2>Common Services</h2>
+    <table>
+        <thead>
+            <tr><th>Service</th><th>Access</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Players</td><td>game:GetService("Players")</td><td>Player management</td></tr>
+            <tr><td>Workspace</td><td>game.Workspace</td><td>3D world</td></tr>
+            <tr><td>ReplicatedStorage</td><td>game:GetService("ReplicatedStorage")</td><td>Shared storage</td></tr>
+            <tr><td>ServerStorage</td><td>game:GetService("ServerStorage")</td><td>Server-only storage</td></tr>
+            <tr><td>RunService</td><td>game:GetService("RunService")</td><td>Game loop</td></tr>
+            <tr><td>TweenService</td><td>game:GetService("TweenService")</td><td>Animations</td></tr>
+            <tr><td>DataStoreService</td><td>game:GetService("DataStoreService")</td><td>Data persistence</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Instance Methods</h2>
+    <table>
+        <thead>
+            <tr><th>Method</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>:Clone()</td><td>Create a copy</td></tr>
+            <tr><td>:Destroy()</td><td>Remove and cleanup</td></tr>
+            <tr><td>:FindFirstChild(name)</td><td>Find direct child</td></tr>
+            <tr><td>:WaitForChild(name)</td><td>Wait for child</td></tr>
+            <tr><td>:GetChildren()</td><td>Get all children</td></tr>
+            <tr><td>:GetDescendants()</td><td>Get all descendants</td></tr>
+            <tr><td>:IsA(className)</td><td>Check class type</td></tr>
+            <tr><td>:GetAttribute(name)</td><td>Get attribute value</td></tr>
+            <tr><td>:SetAttribute(name, value)</td><td>Set attribute</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Common Events</h2>
+    <table>
+        <thead>
+            <tr><th>Event</th><th>Fires When</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>PlayerAdded</td><td>Player joins</td></tr>
+            <tr><td>PlayerRemoving</td><td>Player leaves</td></tr>
+            <tr><td>CharacterAdded</td><td>Character spawns</td></tr>
+            <tr><td>Touched</td><td>Part touched</td></tr>
+            <tr><td>TouchEnded</td><td>Touch ended</td></tr>
+            <tr><td>Changed</td><td>Property changes</td></tr>
+            <tr><td>ChildAdded</td><td>Child added</td></tr>
+            <tr><td>MouseButton1Click</td><td>GUI clicked</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Appendix C -->
+    <h1 id="app-c">Appendix C: Common Patterns and Idioms</h1>
+
+    <h2>Singleton Pattern</h2>
+    <pre><code>local MyService = {}
+
+function MyService:init()
+    -- Initialize once
+end
+
+return MyService</code></pre>
+
+    <h2>Factory Pattern</h2>
+    <pre><code>local Factory = {}
+
+function Factory.create(type, config)
+    if type == "A" then
+        return TypeA.new(config)
+    elseif type == "B" then
+        return TypeB.new(config)
+    end
+end
+
+return Factory</code></pre>
+
+    <h2>Observer Pattern</h2>
+    <pre><code>local EventBus = {}
+local listeners = {}
+
+function EventBus:on(event, callback)
+    listeners[event] = listeners[event] or {}
+    table.insert(listeners[event], callback)
+end
+
+function EventBus:emit(event, ...)
+    if listeners[event] then
+        for _, cb in ipairs(listeners[event]) do
+            cb(...)
+        end
+    end
+end
+
+return EventBus</code></pre>
+
+    <h2>Object Pool Pattern</h2>
+    <pre><code>local ObjectPool = {}
+local pool = {}
+local active = {}
+
+function ObjectPool:get()
+    if #pool > 0 then
+        local obj = table.remove(pool)
+        active[obj] = true
+        return obj
+    end
+    return self:createNew()
+end
+
+function ObjectPool:release(obj)
+    active[obj] = nil
+    self:reset(obj)
+    table.insert(pool, obj)
+end
+
+return ObjectPool</code></pre>
+
+    <!-- Appendix D -->
+    <h1 id="app-d">Appendix D: Resources and Further Learning</h1>
+
+    <h2>Official Resources</h2>
+    <ul>
+        <li><strong>Roblox Creator Documentation:</strong> create.roblox.com/docs</li>
+        <li><strong>Roblox Developer Forum:</strong> devforum.roblox.com</li>
+        <li><strong>Roblox API Reference:</strong> create.roblox.com/docs/reference/engine</li>
+    </ul>
+
+    <h2>Learning Platforms</h2>
+    <ul>
+        <li><strong>Roblox Creator Hub:</strong> Structured learning paths</li>
+        <li><strong>YouTube:</strong> Countless tutorial channels</li>
+        <li><strong>Community Courses:</strong> Various paid and free options</li>
+    </ul>
+
+    <h2>Tools and Plugins</h2>
+    <ul>
+        <li><strong>Rojo:</strong> External editor integration</li>
+        <li><strong>TestEZ:</strong> Unit testing framework</li>
+        <li><strong>Luau LSP:</strong> Language server for better IDE support</li>
+    </ul>
+
+    <h2>Best Practices Summary</h2>
+    <ol>
+        <li>Always use local variables</li>
+        <li>Validate all server inputs</li>
+        <li>Cache frequently accessed values</li>
+        <li>Organize code into modules</li>
+        <li>Use pcall for error-prone operations</li>
+        <li>Profile and optimize performance</li>
+        <li>Test on multiple platforms</li>
+        <li>Document your code</li>
+    </ol>
+
+    <div style="text-align: center; margin-top: 60px; padding: 40px; background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 12px; color: white;">
+        <h2 style="color: #ff6b6b; margin-bottom: 20px;">Congratulations!</h2>
+        <p style="font-size: 14pt; margin-bottom: 20px;">You have completed The Complete Roblox Lua Programming Documentary.</p>
+        <p style="opacity: 0.8;">From basics to advanced concepts, you now have the knowledge to create amazing Roblox experiences.</p>
+        <p style="opacity: 0.6; margin-top: 30px;">Keep learning, keep building, and most importantly - have fun!</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js"></script>
+</body>
+</html>
